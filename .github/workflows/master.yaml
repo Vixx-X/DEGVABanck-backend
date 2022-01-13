@@ -1,0 +1,37 @@
+name: "CD front"
+
+on:
+  # Triggers the workflow on push or accepted pull request events but only for the master branch
+  pull_request:
+    branches: [ main ]
+    types: [ synchronize ]
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: run linter
+        run: |
+          yarn install
+          yarn lint
+  deploy:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      # Use out custom action
+      - name: deploy via ssh
+        uses: ./.github/actions/ssh-deploy
+        with:
+          app-name: back
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}

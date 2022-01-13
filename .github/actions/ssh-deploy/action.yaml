@@ -1,0 +1,32 @@
+name: "Setup, Test and Deploy through ssh"
+description: "Setup frontend, test, and deploy it with out server with ssh"
+inputs:
+  app-name: # args for server deploy
+    description: "Arguments for server deploy"
+    default: "front"
+  host:
+    description: "SSH Host"
+    required: true
+  username:
+    description: "SSH Username"
+    required: true
+  key:
+    description: "SSH Key"
+    required: true
+  port:
+    description: "SSH Post"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    # Runs front deployment using ssh
+    - name: deploy via ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.key }}
+        port: ${{ inputs.port }}
+        script: |
+          ./run.sh ${{ inputs.app-name }}
+

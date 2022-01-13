@@ -1,0 +1,19 @@
+# django
+Django==4.0.1
+
+# drf
+django-filter==21.1
+djangorestframework==3.13.1
+Markdown==3.3.6
+
+# jwt
+djangorestframework-simplejwt==4.7.1
+
+# api doc
+drf-spectacular==0.17.2
+
+# envs
+environ==1.0
+
+# postgres
+psycopg2==2.8.6
