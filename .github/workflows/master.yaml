@@ -1,4 +1,4 @@
-name: "CD front"
+name: "CD back"
 
 on:
   # Triggers the workflow on push or accepted pull request events but only for the master branch
@@ -12,16 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: run linter
-        run: |
-          yarn install
-          yarn lint
   deploy:
-    needs: [ test ]
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
