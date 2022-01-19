@@ -14,27 +14,54 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth.decorators import user_passes_test
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView
 )
 
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+def apidocs_view_permission(user):
+    "User can read or se the api documentation if it is staff"
+    return user.is_staff
+
+docs_urls = [
+    # documentation
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    # optional ui:
+    path(
+        "",
+        user_passes_test(apidocs_view_permission)(
+            SpectacularSwaggerView.as_view(url_name="schema")
+        ),
+        name="default-docs",
+    ),
+    path(
+        "swagger-ui/",
+        user_passes_test(apidocs_view_permission)(
+            SpectacularSwaggerView.as_view(url_name="schema")
+        ),
+        name="swagger-ui",
+    ),
+    path(
+        "redoc/",
+        user_passes_test(apidocs_view_permission)(
+            SpectacularRedocView.as_view(url_name="schema")
+        ),
+        name="redoc",
+    ),
+]
+
 
 urlpatterns = [
     # admin
     path('admin/', admin.site.urls),
 
-    # jwt
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # user
+    path('', include(('degvabank.apps.user.urls', "degvabank.apps.user"), namespace="user")),
 
     # docs
-    path('docs/schema/', SpectacularAPIView.as_view(), name='schema'),
-    # Optional UI:
-    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='default-ui'),
-    path('docs/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('docs/', include(docs_urls)),
 ]

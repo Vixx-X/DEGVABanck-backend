@@ -66,13 +66,9 @@ function help {
 	echo "venv           - activate virtualenv"
 	echo ""
 	echo "setup_venv     - initial venv and pip install the project"
-	echo "setup_db       - initial setup, migration, createsuperuser and populate countries on Postgres DB"
+	echo "setup_db       - initial setup, migrate and createsuperuser on Postgres DB"
 	echo ""
 	echo "check          - check everything before user can push to remote"
-	echo ""
-	echo "build_css      - build and minify css files"
-	echo "build_js       - build and minify js files"
-	echo "build          - build and minify both css and js files"
 }
 
 echo "All done!"

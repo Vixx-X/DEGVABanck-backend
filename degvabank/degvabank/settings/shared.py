@@ -19,7 +19,7 @@ import environ
 from django.utils.translation import gettext_lazy as _
 
 # reading .env file
-env = environ.Env(PROFILER=(bool, False))
+env = environ.Env()
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / ...
@@ -38,10 +38,6 @@ SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=$evl!bhp-zc#p4-n6@4j=8#a24mh^noo3-6i5+8(&o)l+ygic'
-
-
 # Email settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
@@ -53,6 +49,7 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 # Application definition
 # fmt: off
 INSTALLED_APPS = [
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,13 +58,23 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',  # enable search
 
-    # 3rd parties
+    # our apps
+    'degvabank.apps.user.apps.UserConfig',
+
+    ## 3rd parties ##
+
     'rest_framework',
+
+    # jwt
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist', # token black listing
 
+    # otp
+    'django_otp',
+    'django_otp.plugins.otp_email',
+
     # api documentation
-    "drf_spectacular",
+    'drf_spectacular',
 ]
 # fmt: on
 
@@ -163,6 +170,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',
+    ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -179,7 +189,7 @@ SPECTACULAR_SETTINGS = {
 
 
 # Specifing our user
-# AUTH_USER_MODEL = "customer.User" # Currently not using it
+AUTH_USER_MODEL = "user.User" # Currently not using it
 
 
 # DRF simplejwt settings

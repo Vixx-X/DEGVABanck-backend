@@ -12,8 +12,11 @@ djangorestframework-simplejwt==4.7.1
 # api doc
 drf-spectacular==0.17.2
 
+# otp
+django-otp==1.1.3
+
 # envs
-environ==1.0
+python-environ==0.4.54
 
 # postgres
 psycopg2==2.8.6
