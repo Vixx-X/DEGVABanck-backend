@@ -28,7 +28,7 @@ class WelcomeMail(BaseSimpleMail):
 class SendOTPMail(BaseSimpleMail):
     email_key = EMAIL_TYPES.SEND_OTP
     context = {
-        "user": User.objects.first() or "<none>",
+        "user": "admin",
         "token": 123456,
     }
 
