@@ -20,3 +20,7 @@ python-environ==0.4.54
 
 # postgres
 psycopg2==2.8.6
+
+# email
+git+https://github.com/Vixx-X/django-simple-mail.git
+django-ckeditor==6.2.0

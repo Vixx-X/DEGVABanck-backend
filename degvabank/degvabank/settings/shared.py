@@ -41,10 +41,16 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # Email settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
-EMAIL_USE_TLS = True
-EMAIL_PORT = env("EMAIL_PORT", default=587)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_USE_TLS = not EMAIL_USE_SSL
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# simple-mail settings
+# https://github.com/VingtCinq/django-simple-mail
+SIMPLE_MAIL_USE_CKEDITOR = True
 
 # Application definition
 # fmt: off
@@ -75,6 +81,10 @@ INSTALLED_APPS = [
 
     # api documentation
     'drf_spectacular',
+
+    # email
+    'simple_mail',
+    'ckeditor',
 ]
 # fmt: on
 
