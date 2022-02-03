@@ -223,9 +223,18 @@ class RegisterUserSerializer(UserProfileSerializer):
 
 
     def save(self):
-        email = self.validated_data["email"]
-        password = self.validated_data["password1"]
-        user = User.objects.create_user(username=email, email=email, password=password)
+        data = self.validated_data
+        user_data = {
+                "username": data["username"],
+                "password": data["password1"],
+                "email": data["email"],
+                "document_id": data["document_id"],
+                "type": data["type"],
+                "first_name": data["first_name"],
+                "last_name": data["last_name"],
+
+        }
+        user = User.objects.create_user(**user_data)
         Account(type=self.validated_data["account_type"], user=user).save()
 
         return user
