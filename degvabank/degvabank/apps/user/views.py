@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, inline_serializer
 
 from django_otp import devices_for_user
+from rest_framework.views import APIView
 
 from .serializers import (
     UserSerializer,
@@ -24,12 +25,11 @@ from .serializers import (
     OTPRequestSerializer,
     ChangePasswordSerializer,
     ChangeEmailSerializer,
-
+    RegisterUserSerializer,
 )
 
 from .models import User
 
-# Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for users
@@ -215,3 +215,45 @@ class ChangeEmailView(generics.GenericAPIView):
                 )
             }
         )
+
+
+class RegistrationView(APIView):
+    """
+    API for registering users
+
+    POST(email, password1, password2):
+    {
+        "email": "user@my-domain.com",
+        "password1": "MyVerySecretPassword123"
+        "password2": "MyVerySecretPassword123"
+    }
+
+    Will create a new user when the user with the specific email does
+    not exist (HTTP_201_CREATED).
+
+    It won't login the newly created user, You can do this with the token API.
+    """
+
+    serializer_class = RegisterUserSerializer
+
+    def send_registration_email(self, user):
+        pass
+
+
+    def post(self, request, *args, **kwargs):
+        ser = self.serializer_class(data=request.data)
+
+        if ser.is_valid():
+            # create the user
+            user = ser.save()
+            self.send_registration_email(user)
+            return Response(
+                {
+                    "message": _(
+                        "You have successfully registered."
+                    )
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)

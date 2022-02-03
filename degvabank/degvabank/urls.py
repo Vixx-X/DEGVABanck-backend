@@ -62,6 +62,15 @@ urlpatterns = [
     # user
     path('', include(('degvabank.apps.user.urls', "degvabank.apps.user"), namespace="user")),
 
+    # account
+    path('', include(('degvabank.apps.account.urls', "degvabank.apps.account"), namespace="account")),
+
+    # card
+    path('', include(('degvabank.apps.card.urls', "degvabank.apps.card"), namespace="card")),
+
+    # transaction
+    # path('', include(('degvabank.apps.transaction.urls', "degvabank.apps.transaction"), namespace="transaction")),
+
     # docs
     path('docs/', include(docs_urls)),
 ]

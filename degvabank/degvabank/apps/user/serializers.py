@@ -11,6 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django_otp import verify_token
 
 from .models import User
+from degvabank.apps.account.models import Account
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -194,3 +195,44 @@ class ChangeEmailSerializer(OTPChallengeSerializer):
         self.user.email = email
         self.user.save()
         return self.user
+
+class RegisterUserSerializer(UserProfileSerializer):
+    password1 = serializers.CharField(
+        required=True,
+        style={"input_type": "password"},
+    )
+    password2 = serializers.CharField(
+        required=True,
+        style={"input_type": "password"},
+    )
+    account_type = serializers.ChoiceField(choices=Account.AccountType.choices)
+
+    def validate(self, attrs):
+        if User.objects.filter(email=attrs["email"]).exists():
+            raise serializers.ValidationError("A user with this email allready exists")
+
+        if attrs["password1"] != attrs["password2"]:
+            raise serializers.ValidationError("Passwords do not match")
+
+        try:
+            password_validation.validate_password(attrs["password1"])
+        except ValidationError as e:
+            raise serializers.ValidationError(str(e))
+
+        return attrs
+
+
+    def save(self):
+        email = self.validated_data["email"]
+        password = self.validated_data["password1"]
+        user = User.objects.create_user(username=email, email=email, password=password)
+        Account(type=self.validated_data["account_type"]).save()
+
+        return user
+
+    class Meta(UserProfileSerializer.Meta):
+        fields = UserProfileSerializer.Meta.fields + [
+            "password1",
+            "password2",
+            "account_type",
+        ]

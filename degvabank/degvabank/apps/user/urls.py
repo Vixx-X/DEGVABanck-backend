@@ -15,6 +15,11 @@ router.register(
 
 user_urls = [
     path(
+        "register/",
+        views.RegistrationView.as_view(),
+        name="register",
+    ),
+    path(
         "profile/",
         views.ProfileView.as_view(),
         name="profile",

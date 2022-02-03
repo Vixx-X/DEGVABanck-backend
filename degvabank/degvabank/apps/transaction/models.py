@@ -6,22 +6,14 @@ date
 target_account (reference)
 source_account (reference)
 """
-import uuid
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from degvabank.degvabank.apps.account.models import Account
-
 class Transaction(models.Model):
-    id = models.UUIDField(
-        _("transaction id"),
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
-
     amount = models.DecimalField(
+        _("ammount of money"),
+        max_digits=12,
         decimal_places=2,
     )
 
@@ -30,14 +22,17 @@ class Transaction(models.Model):
         max_length=50,
     )
 
-    date = models.DateField()
-
-    target_account = models.ForeignKey(
-        Account,
-        to_field='account_num'
+    date = models.DateField(
+        _("transaction date"),
+        auto_now=True,
     )
 
-    source_account = models.ForeignKey(
-        Account,
-        to_field='account_num'
+    target_account = models.CharField(
+        verbose_name=_("target account"),
+        max_length=20,
+    )
+
+    source_account = models.CharField(
+        verbose_name=_("source account"),
+        max_length=20,
     )

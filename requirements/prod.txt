@@ -24,3 +24,9 @@ psycopg2==2.8.6
 # email
 git+https://github.com/Vixx-X/django-simple-mail.git
 django-ckeditor==6.2.0
+
+# cors
+django-cors-headers==3.11.0
+
+# credit cards
+django-credit-cards==0.4.1

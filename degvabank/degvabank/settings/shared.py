@@ -66,6 +66,9 @@ INSTALLED_APPS = [
 
     # our apps
     'degvabank.apps.user.apps.UserConfig',
+    'degvabank.apps.account.apps.AccountConfig',
+    'degvabank.apps.card.apps.CardConfig',
+    'degvabank.apps.transaction.apps.TransactionConfig',
 
     ## 3rd parties ##
 
@@ -234,3 +237,23 @@ SIMPLE_JWT = {
 # Expect https from HTTP Server
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
+# CORS settings
+# https://github.com/adamchainz/django-cors-headers
+# TODO: REMOVE LOCALHOST ONES WHEN IT IS IN REAL PRODUCTION
+CORS_ALLOWED_ORIGINS = [
+    "https://api.bank.vittorioadesso.com",
+    "https://bank.vittorioadesso.com"
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.bank.vittorioadesso.com",
+    "https://bank.vittorioadesso.com"
+]
+
+CORS_ALLOW_CREDENTIALS = True
