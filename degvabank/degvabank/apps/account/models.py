@@ -47,3 +47,12 @@ class Account(models.Model):
         on_delete=models.RESTRICT,
         related_name="accounts"
     )
+
+    class Meta:
+        app_label = "account"
+        db_table = "accounts"
+        verbose_name = _("account")
+        verbose_name_plural = _("accounts")
+
+    def __str__(self):
+        return f"Account {self.id:018} of {self.user}"
