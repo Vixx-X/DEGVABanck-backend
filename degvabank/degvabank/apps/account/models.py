@@ -35,6 +35,7 @@ class Account(models.Model):
 
     balance = models.DecimalField(
         _("account balance"),
+        default=0,
         max_digits=12,
         decimal_places=2,
     )
