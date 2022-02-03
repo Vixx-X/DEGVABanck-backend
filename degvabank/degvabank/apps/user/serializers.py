@@ -226,7 +226,7 @@ class RegisterUserSerializer(UserProfileSerializer):
         email = self.validated_data["email"]
         password = self.validated_data["password1"]
         user = User.objects.create_user(username=email, email=email, password=password)
-        Account(type=self.validated_data["account_type"]).save()
+        Account(type=self.validated_data["account_type"], user=user).save()
 
         return user
 
