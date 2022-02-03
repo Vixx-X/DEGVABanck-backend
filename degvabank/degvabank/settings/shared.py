@@ -248,7 +248,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # TODO: REMOVE LOCALHOST ONES WHEN IT IS IN REAL PRODUCTION
 CORS_ALLOWED_ORIGINS = [
     "https://api.bank.vittorioadesso.com",
-    "https://bank.vittorioadesso.com"
+    "https://bank.vittorioadesso.com",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://localhost:3000",
@@ -257,7 +257,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://api.bank.vittorioadesso.com",
-    "https://bank.vittorioadesso.com"
+    "https://bank.vittorioadesso.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
