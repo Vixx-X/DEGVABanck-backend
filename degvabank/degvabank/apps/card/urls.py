@@ -15,12 +15,12 @@ router.register(
 
 credit_card_urls = [
     path(
-        "credit_cards/",
-        views.UserCreditCardListView.as_view(),
+        "credit-cards/",
+        views.UserCreditCardListCreateView.as_view(),
         name="user-credit-cards",
     ),
     path(
-        "credit_cards/<int:id>/",
+        "credit-cards/<int:id>/",
         views.UserCreditCardView.as_view(),
         name="user-credit-card-detail",
     ),
@@ -28,12 +28,12 @@ credit_card_urls = [
 
 debit_card_urls = [
     path(
-        "debit_cards/",
-        views.UserDebitCardListView.as_view(),
+        "debit-cards/",
+        views.UserDebitCardListCreateView.as_view(),
         name="user-credit-cards",
     ),
     path(
-        "debit_cards/<int:id>/",
+        "debit-cards/<int:id>/",
         views.UserDebitCardView.as_view(),
         name="user-debit-card-detail",
     ),

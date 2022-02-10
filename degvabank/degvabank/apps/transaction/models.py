@@ -97,4 +97,11 @@ class Transaction(models.Model):
 
     objects = TransactionManager()
 
+    class Meta:
+        app_label = "transaction"
+        db_table = "transactions"
+        verbose_name = _("transaction")
+        verbose_name_plural = _("transactions")
 
+    def __str__(self):
+        return f"Transaction {self.id:018}"

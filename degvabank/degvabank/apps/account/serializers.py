@@ -13,9 +13,15 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class UserAccountSerializer(serializers.ModelSerializer):
     cards = UserDebitCardSerializer(many=True)
+    id = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        return obj.pretty_account_number
+
     class Meta:
         model = Account
         fields = [
+            "id",
             "type",
             "balance",
             "date_created",

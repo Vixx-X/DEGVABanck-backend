@@ -199,6 +199,8 @@ class ChangeEmailSerializer(OTPChallengeSerializer):
         return self.user
 
 class RegisterUserSerializer(UserProfileSerializer):
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
     password1 = serializers.CharField(
         required=True,
         style={"input_type": "password"},
@@ -220,14 +222,13 @@ class RegisterUserSerializer(UserProfileSerializer):
     def save(self):
         data = self.validated_data
         user_data = {
-                "username": data["username"],
-                "password": data["password1"],
-                "email": data["email"],
-                "document_id": data["document_id"],
-                "type": data["type"],
-                "first_name": data["first_name"],
-                "last_name": data["last_name"],
-
+            "username": data["username"],
+            "password": data["password1"],
+            "email": data["email"],
+            "document_id": data["document_id"],
+            "type": data["type"],
+            "first_name": data["first_name"],
+            "last_name": data["last_name"],
         }
         user = User.objects.create_user(**user_data)
         Account(type=self.validated_data["account_type"], user=user).save()

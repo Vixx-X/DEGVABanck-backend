@@ -38,22 +38,11 @@ class Account(models.Model):
         choices=AccountType.choices,
     )
 
-    class AccountStatus(models.TextChoices):
-        APPROVED = "APPROVED", _("Approved")
-        PENDING = "PENDING", _("Pending")
-        DENIED = "DENIED", _("Denied")
-
     is_active = models.BooleanField(
         _("account is active"),
         default=True,
         db_index=True,
         help_text=_("account should be used by owner?")
-    )
-    status = models.CharField(
-        _("status of account creation petition"),
-        max_length=10,
-        choices=AccountStatus.choices,
-        default=AccountStatus.PENDING
     )
 
     balance = models.DecimalField(

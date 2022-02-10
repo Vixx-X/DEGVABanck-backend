@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'degvabank.apps.account.apps.AccountConfig',
     'degvabank.apps.card.apps.CardConfig',
     'degvabank.apps.transaction.apps.TransactionConfig',
+    'degvabank.apps.petitions.apps.PetitionsConfig',
 
     ## 3rd parties ##
 

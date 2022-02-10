@@ -1,6 +1,7 @@
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
+from degvabank.apps.petitions.models import Petition
 
 from .serializers import CreditCardSerializer, UserCreditCardSerializer, DebitCardSerializer, UserDebitCardSerializer
 from .models import CreditCard, DebitCard
@@ -16,16 +17,25 @@ class CreditCardViewSet(viewsets.ModelViewSet):
     queryset = CreditCard.objects.all()
     serializer_class = CreditCardSerializer
 
-class UserCreditCardListView(generics.ListAPIView):
+class UserCreditCardListCreateView(generics.ListCreateAPIView):
     """
     List user credit cards
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserCreditCardSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return self.request.user.cards.all()
+
+    def perform_create(self, serializer):
+        obj = serializer.save()
+        Petition.objects.create(
+            content_object=obj,
+            reason=Petition.ReasonType.CREATE_CREDIT_CARD,
+            user=self.request.user
+        )
 
 class UserCreditCardView(generics.RetrieveAPIView):
     """
@@ -50,9 +60,9 @@ class DebitCardViewSet(viewsets.ModelViewSet):
     queryset = DebitCard.objects.all()
     serializer_class = DebitCardSerializer
 
-class UserDebitCardListView(generics.ListAPIView):
+class UserDebitCardListCreateView(generics.ListCreateAPIView):
     """
-    List user debit cards
+    List and create user debit cards
     """
 
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
@@ -61,6 +71,14 @@ class UserDebitCardListView(generics.ListAPIView):
 
     def get_queryset(self):
         return DebitCard.objects.filter(account__user=self.request.user)
+
+    def perform_create(self, serializer):
+        obj = serializer.save()
+        Petition.objects.create(
+            content_object=obj,
+            reason=Petition.ReasonType.CREATE_DEBIT_CARD,
+            user=self.request.user
+        )
 
 class UserDebitCardView(generics.RetrieveAPIView):
     """
@@ -72,3 +90,4 @@ class UserDebitCardView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return DebitCard.objects.filter(account__user=self.request.user)
+

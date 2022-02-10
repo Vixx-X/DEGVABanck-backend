@@ -12,7 +12,7 @@ router.register(
 user_account_urls = [
     path(
         "accounts/",
-        views.UserAccountListView.as_view(),
+        views.UserAccountListCreateView.as_view(),
         name="user-accounts",
     ),
     path(

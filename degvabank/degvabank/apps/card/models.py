@@ -1,6 +1,7 @@
 from random import randint
 from types import NotImplementedType
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 from creditcards.models import (
@@ -64,7 +65,10 @@ class Card(models.Model):
         return gen_card_number(self.type)
 
     def save(self, *args, **kwargs):
+        now = datetime.now()
         self.number = self.number or self.generate_card_number()
+        self.security_code = self.security_code or randint(1, 9999)
+        self.expiration_date = self.expiration_date or now.replace(now.year + 5)
         return super().save(*args, **kwargs)
 
     def __str__(self):
