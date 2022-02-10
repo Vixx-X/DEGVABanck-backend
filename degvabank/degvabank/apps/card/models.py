@@ -1,5 +1,4 @@
 from random import randint
-from types import NotImplementedType
 from django.db import models
 from datetime import datetime
 
@@ -61,7 +60,7 @@ class Card(models.Model):
 
     def generate_card_number(self):
         if not self.type:
-            raise NotImplementedType("Children class need to implement self.type, in order to use this gen")
+            raise NotImplementedError("Children class need to implement self.type, in order to use this gen")
         return gen_card_number(self.type)
 
     def save(self, *args, **kwargs):
