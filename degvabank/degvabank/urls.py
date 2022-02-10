@@ -69,8 +69,14 @@ urlpatterns = [
     path('', include(('degvabank.apps.card.urls', "degvabank.apps.card"), namespace="card")),
 
     # transaction
-    # path('', include(('degvabank.apps.transaction.urls', "degvabank.apps.transaction"), namespace="transaction")),
+    path('', include(('degvabank.apps.transaction.urls', "degvabank.apps.transaction"), namespace="transaction")),
 
     # docs
     path('docs/', include(docs_urls)),
 ]
+
+# handler400 = 'degvabank.core.exception_handler.bad_request'
+# handler403 = 'degvabank.core.exception_handler.default_handler'
+# handler404 = 'degvabank.core.exception_handler.default_handler'
+# handler500 = 'degvabank.core.exception_handler.default_handler'
+# handler500 = 'rest_framework.exceptions.server_error'

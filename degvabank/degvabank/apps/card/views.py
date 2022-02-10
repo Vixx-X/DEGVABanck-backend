@@ -60,7 +60,7 @@ class UserDebitCardListView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.cards.all()
+        return DebitCard.objects.filter(account__user=self.request.user)
 
 class UserDebitCardView(generics.RetrieveAPIView):
     """

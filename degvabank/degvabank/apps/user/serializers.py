@@ -100,7 +100,7 @@ class PasswordSerializer(serializers.Serializer):
             if password1 != password2:
                 raise ValidationError(
                     _("The two password fields didn’t match."),
-                    code="password_mismatch",
+                    code="unmatch password",
                 )
         password_validation.validate_password(password2, self.user)
         return password2
@@ -137,9 +137,18 @@ class OTPChallengeSerializer(serializers.Serializer):
             )
 
 class ChangePasswordSerializer(OTPChallengeSerializer):
-    old_password = serializers.CharField()
-    new_password1 = serializers.CharField()
-    new_password2 = serializers.CharField()
+    old_password = serializers.CharField(
+        required=True,
+        style={"input_type": "password"},
+    )
+    new_password1 = serializers.CharField(
+        required=True,
+        style={"input_type": "password"},
+    )
+    new_password2 = serializers.CharField(
+        required=True,
+        style={"input_type": "password"},
+    )
 
     def validate_old_password(self, old_password):
         if not self.user.check_password(old_password):
@@ -153,12 +162,11 @@ class ChangePasswordSerializer(OTPChallengeSerializer):
 
         password1 = attrs["new_password1"]
         password2 = attrs["new_password2"]
-        if password1 and password2:
-            if password1 != password2:
-                raise ValidationError(
-                    _("The two password fields didn’t match."),
-                    code="password_mismatch",
-                )
+        if password1 != password2:
+            raise ValidationError(
+                _("The two password fields didn’t match."),
+                code="password_mismatch",
+            )
 
         password_validation.validate_password(password2, self.user)
         return password2
@@ -178,12 +186,6 @@ class ChangeEmailSerializer(OTPChallengeSerializer):
             raise ValidationError(
                 _("The email has not changed."),
                 code="repeated_email",
-            )
-
-        if User.objects.filter(email=email).count():
-            raise ValidationError(
-                _("The email is already in use."),
-                code="used_email",
             )
 
     def validate(self, attrs):
@@ -208,17 +210,10 @@ class RegisterUserSerializer(UserProfileSerializer):
     account_type = serializers.ChoiceField(choices=Account.AccountType.choices)
 
     def validate(self, attrs):
-        if User.objects.filter(email=attrs["email"]).exists():
-            raise serializers.ValidationError("A user with this email allready exists")
-
         if attrs["password1"] != attrs["password2"]:
             raise serializers.ValidationError("Passwords do not match")
 
-        try:
-            password_validation.validate_password(attrs["password1"])
-        except ValidationError as e:
-            raise serializers.ValidationError(str(e))
-
+        password_validation.validate_password(attrs["password1"])
         return attrs
 
 

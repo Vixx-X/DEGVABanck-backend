@@ -18,7 +18,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
         fields = [
             "type",
             "balance",
-            "creation_date",
+            "date_created",
             "cards",
         ]
 

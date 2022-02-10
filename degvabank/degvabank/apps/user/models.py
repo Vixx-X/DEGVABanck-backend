@@ -5,6 +5,13 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class User(AbstractUser):
+    email = models.EmailField(
+        _('email address'),
+        unique=True,
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        },
+    )
 
     class UserType(models.TextChoices):
         NATURAL = "NATURAL", _("Natural")

@@ -7,12 +7,43 @@ target_account (reference)
 source_account (reference)
 """
 
+from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from degvabank.apps.card.utils import is_valid_credit_card
+from degvabank.apps.transaction.managers import TransactionManager
+
+
 class Transaction(models.Model):
+
+    class TransactionType(models.TextChoices):
+        ERROR = "C2C", _("error (credit card to credit card)")
+        FROM_CREDIT_CARD = "C2A", _("from credit card to account")
+        TO_CREDIT_CARD = "A2C", _("from account to credit card")
+        ACCOUNTS = "A2A", _("from account to account")
+
+    type = models.CharField(
+        _("transaction type"),
+        choices=TransactionType.choices,
+        max_length=4
+    )
+
+    class TransactionStatus(models.TextChoices):
+        ERROR = "ERR", _("error")
+        PENDING = "PEN", _("pending")
+        ACCEPTED = "ACC", _("accepted")
+        REJECTED = "REJ", _("rejected")
+
+    status = models.CharField(
+        _("transaction status"),
+        choices=TransactionStatus.choices,
+        default=TransactionStatus.PENDING,
+        max_length=4
+    )
+
     amount = models.DecimalField(
-        _("ammount of money"),
+        _("amount of money"),
         max_digits=12,
         decimal_places=2,
     )
@@ -27,12 +58,43 @@ class Transaction(models.Model):
         auto_now=True,
     )
 
-    target_account = models.CharField(
-        verbose_name=_("target account"),
+    target = models.CharField(
+        verbose_name=_("target account or credit card number"),
         max_length=20,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^(\d{16}|\d{20})$",
+                message=_("not a valid account or credit card"),
+            ),
+        ]
     )
 
-    source_account = models.CharField(
-        verbose_name=_("source account"),
+    source = models.CharField(
+        verbose_name=_("source account or credit card number"),
         max_length=20,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^(\d{16}|\d{20})$",
+                message=_("not a valid account or credit card"),
+            ),
+        ]
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = self.type or self.generate_type()
+
+    def generate_type(self):
+        cc_src = is_valid_credit_card(self.source)
+        cc_dst = is_valid_credit_card(self.target)
+        if cc_dst and cc_src:
+            return __class__.TransactionType.ERROR
+        if cc_src:
+            return __class__.TransactionType.FROM_CREDIT_CARD
+        if cc_dst:
+            return __class__.TransactionType.TO_CREDIT_CARD
+        return __class__.TransactionType.ACCOUNTS
+
+    objects = TransactionManager()
+
+

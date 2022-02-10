@@ -193,6 +193,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "DEFAULT_FILTER_BACKENDS": ["rest_framework.filters.OrderingFilter"],
     "PAGE_SIZE": 10,
+    # "NON_FIELD_ERRORS_KEY": "general_error",
+    'EXCEPTION_HANDLER': 'degvabank.core.exception_handler.default_handler'
 }
 
 SPECTACULAR_SETTINGS = {
