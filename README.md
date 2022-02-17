@@ -1,2 +1,2 @@
-# DEGVABanck-backend
+# DEGVABank-backend
 uni project
