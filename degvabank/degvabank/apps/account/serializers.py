@@ -12,8 +12,12 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class UserAccountSerializer(serializers.ModelSerializer):
-    cards = UserDebitCardSerializer(many=True)
-    id = serializers.SerializerMethodField()
+
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    cards = UserDebitCardSerializer(many=True, read_only=True)
 
     def get_id(self, obj):
         return obj.pretty_account_number
@@ -26,5 +30,6 @@ class UserAccountSerializer(serializers.ModelSerializer):
             "balance",
             "date_created",
             "cards",
+            "user",
         ]
 

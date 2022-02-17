@@ -40,7 +40,7 @@ class Account(models.Model):
 
     is_active = models.BooleanField(
         _("account is active"),
-        default=True,
+        default=False,
         db_index=True,
         help_text=_("account should be used by owner?")
     )
@@ -93,4 +93,4 @@ class Account(models.Model):
         verbose_name_plural = _("accounts")
 
     def __str__(self):
-        return f"Account {self.id:018} of {self.user}"
+        return f"Account {self.id} of {self.user}"

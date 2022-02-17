@@ -57,6 +57,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = [
+            "id",
             "source",
             "target",
             "document_id",
@@ -66,4 +67,4 @@ class UserTransactionSerializer(serializers.ModelSerializer):
             "reason",
             "date",
         ]
-        read_only_fields = ("type", "status", "date")
+        read_only_fields = ("type", "status", "date", "id")
