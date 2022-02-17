@@ -16,16 +16,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
-def get_transactions_by_user(user):
-    accounts = user.accounts.values_list("id", flat=True)
-    credit_cards = user.credits.values_list("number", flat=True)
-    user_related_ids = accounts + credit_cards
-    from_filter = Q(source__in=user_related_ids)
-    to_filter = Q(target=user_related_ids)
-    user_filter = from_filter | to_filter
-    return Transaction.objects.filter(user_filter)
-
-
 class UserTransactionListCreateView(generics.ListCreateAPIView):
     """
     List user transactions
@@ -35,7 +25,7 @@ class UserTransactionListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return get_transactions_by_user(self.request.user)
+        return Transaction.objects.get_queryset_by_user(self.request.user)
 
 class UserTransactionView(generics.RetrieveAPIView):
     """
@@ -46,4 +36,4 @@ class UserTransactionView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return get_transactions_by_user(self.request.user)
+        return Transaction.objects.get_queryset_by_user(self.request.user)

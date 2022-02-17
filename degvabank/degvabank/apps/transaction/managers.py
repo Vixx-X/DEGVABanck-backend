@@ -1,8 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.query_utils import Q
 from degvabank.apps.account.models import Account
 from degvabank.apps.account.utils import is_account
 from degvabank.apps.card.models import CreditCard
+from degvabank.apps.transaction.models import Transaction
 
 class TransactionMixin:
     def rest_source(self, source, ammount, is_account):
@@ -47,6 +49,15 @@ class TransactionMixin:
         return transaction
 
 class TransactionManager(TransactionMixin, models.Manager):
+    def get_queryset_by_user(self, user):
+        accounts = user.accounts.values_list("id", flat=True)
+        credit_cards = user.credits.values_list("number", flat=True)
+        user_related_ids = accounts + credit_cards
+        from_filter = Q(source__in=user_related_ids)
+        to_filter = Q(target=user_related_ids)
+        user_filter = from_filter | to_filter
+        return Transaction.objects.filter(user_filter)
+
     def create(self, *args, **kwargs):
         transaction = self.model(*args, **kwargs)
         transaction = self.process_transaction(transaction)
