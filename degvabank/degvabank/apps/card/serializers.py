@@ -10,9 +10,19 @@ class CreditCardSerializer(serializers.ModelSerializer):
 
 
 class UserCreditCardSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
     class Meta:
         model = CreditCard
-        fields = "__all__"
+        fields = [
+            "number",
+            "security_code",
+            "expiration_date",
+            "credit",
+            "user",
+        ]
+        read_only_fields = ('security_code', "expiration_date", "number")
 
 
 class DebitCardSerializer(serializers.ModelSerializer):

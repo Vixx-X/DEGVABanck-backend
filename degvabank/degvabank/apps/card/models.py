@@ -67,7 +67,7 @@ class Card(models.Model):
         now = datetime.now()
         self.number = self.number or self.generate_card_number()
         self.security_code = self.security_code or randint(1, 9999)
-        self.expiration_date = self.expiration_date or now.replace(now.year + 5)
+        self.expiration_date = self.expiration_date or now.replace(now.year + 5).date()
         return super().save(*args, **kwargs)
 
     def __str__(self):

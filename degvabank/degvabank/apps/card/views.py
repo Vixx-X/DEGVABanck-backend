@@ -27,7 +27,7 @@ class UserCreditCardListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.cards.all()
+        return self.request.user.credit_cards.all()
 
     def perform_create(self, serializer):
         obj = serializer.save()
@@ -46,7 +46,7 @@ class UserCreditCardView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.cards.all()
+        return self.request.user.credit_cards.all()
 
 
 # debit
