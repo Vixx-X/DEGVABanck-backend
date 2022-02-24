@@ -29,17 +29,6 @@ class UserAccountListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         return self.request.user.accounts.all()
 
-    def perform_create(self, serializer):
-        obj = serializer.save()
-        DebitCard.objects.create(
-            account=obj,
-        )
-        Petition.objects.create(
-            content_object=obj,
-            reason=Petition.ReasonType.OPEN_ACCOUNT,
-            user=self.request.user
-        )
-
 
 class UserAccountView(generics.RetrieveAPIView):
     """

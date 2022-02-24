@@ -1,7 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.query_utils import Q
 from degvabank.apps.account.models import Account
 from degvabank.apps.card.models import CreditCard
+from degvabank.apps.transaction.models import Transaction
 
 class TransactionMixin:
     def rest_source(self, source, ammount, is_account):

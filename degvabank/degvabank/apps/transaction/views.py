@@ -34,7 +34,7 @@ class UserTransactionListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return get_transactions_by_user(self.request.user)
+        return Transaction.objects.get_queryset_by_user(self.request.user)
 
 class UserTransactionView(generics.RetrieveAPIView):
     """
@@ -45,4 +45,4 @@ class UserTransactionView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return get_transactions_by_user(self.request.user)
+        return Transaction.objects.get_queryset_by_user(self.request.user)
