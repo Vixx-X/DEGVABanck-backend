@@ -14,7 +14,7 @@ class PaywayKeysViewSet(viewsets.ModelViewSet):
     queryset = PayWayKeys.objects.all()
     serializer_class = PayWayKeysSerializer
 
-class UserTransactionListCreateView(generics.CreateAPIView):
+class UserPaywayKeysCreateView(generics.CreateAPIView):
 
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserPaywayKeysSerializer
