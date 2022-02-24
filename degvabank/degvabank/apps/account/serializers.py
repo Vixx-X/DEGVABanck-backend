@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from degvabank.apps.card.serializers import UserDebitCardSerializer
-from degvabank.degvabank.apps.petitions.models import Petition
+from degvabank.apps.petitions.models import Petition
 
 from .models import Account
 
