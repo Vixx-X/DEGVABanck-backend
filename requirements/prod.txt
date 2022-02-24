@@ -31,3 +31,5 @@ django-cors-headers==3.11.0
 # credit cards
 django-credit-cards==0.4.1
 
+# Frenet
+cryptography==36.0.1
