@@ -4,13 +4,13 @@ from django.utils.translation import gettext_lazy as _
 from .models import PayWayKeys
 
 class PayWayKeysSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = PayWayKeys
         fields = "__all__"
 
 
 class UserPayWayKeysSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = PayWayKeys
         read_only_fields = [
             "public",
