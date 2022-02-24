@@ -33,6 +33,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         if not (self.acc or self.card):
             raise serializers.ValidationError(_("Source account or card"))
         return value
+
     def validate_target(self, value):
         dst_acc = Account.objects.filter(id=value, is_active=True).first()
         dst_card = CreditCard.objects.filter(number=value, is_active=True).first()
