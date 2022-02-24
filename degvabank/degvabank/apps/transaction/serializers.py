@@ -16,28 +16,27 @@ class TransactionSerializer(serializers.ModelSerializer):
 class UserTransactionSerializer(serializers.ModelSerializer):
     acc = card = dst = None
     document_id = serializers.CharField(
-        write_only=True,
-        max_length=15,
-        validators=[
-            validators.RegexValidator(
-                regex=r"^[eEvVjJ]\d+$",
-                message=_("your document id is not well formatted"),
-            ),
-        ]
-    )
+            write_only=True,
+            max_length=15,
+            validators=[
+                validators.RegexValidator(
+                    regex=r"^[eEvVjJ]\d+$",
+                    message=_("your document id is not well formatted"),
+                    ),
+                ]
+            )
 
     def validate_source(self, value):
         user = self.context['request'].user
-        self.acc = user.accounts.get(id=value, is_active=True)
-        self.card = user.credits.get(number=value, is_active=True)
+        self.acc = user.accounts.filter(id=value, is_active=True).first()
+        self.card = user.credit_cards.filter(number=value, is_active=True).first()
         if not (self.acc or self.card):
-            raise serializers.ValidationError(_("You are not allowd to use that account"))
+            raise serializers.ValidationError(_("Source account or card"))
         return value
-
     def validate_target(self, value):
-        dst_acc = Account.objects.get(id=value, is_active=True)
-        dst_card = CreditCard.objects.get(number=value, is_active=True)
-        if not (dst_card or dst_card):
+        dst_acc = Account.objects.filter(id=value, is_active=True).first()
+        dst_card = CreditCard.objects.filter(number=value, is_active=True).first()
+        if not (dst_acc or dst_card):
             raise serializers.ValidationError(_("Target account or card does not exists"))
         self.dst = dst_card or dst_acc
         return value
@@ -57,13 +56,19 @@ class UserTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = [
-            "source",
-            "target",
-            "document_id",
-            "amount",
-            "type",
-            "status",
-            "reason",
-            "date",
-        ]
-        read_only_fields = ("type", "status", "date")
+                "id",
+                "source",
+                "target",
+                "document_id",
+                "amount",
+                "type",
+                "status",
+                "reason",
+                "date",
+                ]
+        read_only_fields = ("type", "status", "date", "id")
+
+    def create(self, validated_data):
+        field_names = [field.name for field in self.Meta.model._meta.get_fields()]
+        data = {a:b for  a, b in validated_data.items() if a in field_names }
+        return self.Meta.model.objects.create(**data)

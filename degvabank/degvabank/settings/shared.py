@@ -55,6 +55,9 @@ SIMPLE_MAIL_USE_CKEDITOR = True
 # Application definition
 # fmt: off
 INSTALLED_APPS = [
+    'admin_tools_stats',  # this must be BEFORE 'admin_tools' and 'django.contrib.admin'
+    'django_nvd3',
+
     # django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -70,6 +73,7 @@ INSTALLED_APPS = [
     'degvabank.apps.card.apps.CardConfig',
     'degvabank.apps.transaction.apps.TransactionConfig',
     'degvabank.apps.petitions.apps.PetitionsConfig',
+    'degvabank.apps.payway.apps.PaywayConfig',
 
     ## 3rd parties ##
 
@@ -92,6 +96,9 @@ INSTALLED_APPS = [
 
     # cors
     "corsheaders",
+
+    # bower
+    'djangobower'
 ]
 # fmt: on
 
@@ -261,3 +268,23 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Bower settings
+# https://django-admin-charts.readthedocs.io/en/latest/introduction.html#installation-of-javascript-libraries-with-django-bower
+
+BOWER_COMPONENTS_ROOT = BASE_DIR / 'components'
+
+BOWER_INSTALLED_APPS = (
+    'd3#3.3.13',
+    'nvd3#1.7.1',
+)
+
+STATICFILES_FINDERS = (
+    'djangobower.finders.BowerFinder',
+)
+
+ADMIN_CHARTS_NVD3_JS_PATH = 'bow/nvd3/build/nv.d3.js'
+ADMIN_CHARTS_NVD3_CSS_PATH = 'bow/nvd3/build/nv.d3.css'
+ADMIN_CHARTS_D3_JS_PATH = 'bow/d3/d3.js'
+
