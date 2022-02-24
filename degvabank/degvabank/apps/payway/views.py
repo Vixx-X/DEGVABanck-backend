@@ -4,6 +4,7 @@ from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 from .serializers import PayWayKeysSerializer, UserPayWayKeysSerializer
 from .models import PayWayKeys
+from ..user.models import User
 
 class PaywayKeysViewSet(viewsets.ModelViewSet):
     """
@@ -21,6 +22,10 @@ class UserPaywayKeysCreateView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        request.user.key_pairs.all().delete()
+        try:
+            # may not exist
+            request.user.key_pair.delete()
+        except User.key_pair.RelatedObjectDoesNotExist:
+            pass
         return super().create(request, *args, **kwargs)
 

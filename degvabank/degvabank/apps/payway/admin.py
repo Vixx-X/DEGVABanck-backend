@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import PayWayKeys
 
-# Register your models here.
+@admin.register(PayWayKeys)
+class TransactionListAdmin(admin.ModelAdmin):
+    list_display = ("owner", "public")
+
