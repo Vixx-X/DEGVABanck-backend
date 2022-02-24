@@ -1,4 +1,3 @@
-import re
 from rest_framework import status
 from rest_framework.views import exception_handler as drf_exception_handler
 from django.http import JsonResponse
@@ -25,7 +24,6 @@ def bad_request(request, exception, *args, **kwargs):
     """
     Generic 400 error handler.
     """
-    breakpoint()
     data = {
         'error': 'Bad Request (400)'
     }

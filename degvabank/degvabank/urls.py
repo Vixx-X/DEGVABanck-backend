@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth.decorators import user_passes_test
 
@@ -57,8 +59,9 @@ docs_urls = [
 
 urlpatterns = [
     # admin
-    path('admin_tools_stats/', include('admin_tools_stats.urls')),
     path('admin/', admin.site.urls),
+    path('admin_tools/', include('admin_tools.urls')),
+    path('admin_tools_stats/', include('admin_tools_stats.urls')),
 
     # user
     path('', include(('degvabank.apps.user.urls', "degvabank.apps.user"), namespace="user")),
@@ -77,7 +80,7 @@ urlpatterns = [
 
     # docs
     path('docs/', include(docs_urls)),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # handler400 = 'degvabank.core.exception_handler.bad_request'
 # handler403 = 'degvabank.core.exception_handler.default_handler'
