@@ -299,3 +299,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+
+ADMIN_TOOLS_INDEX_DASHBOARD = 'degvabank.dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'degvabank.dashboard.CustomAppIndexDashboard'
