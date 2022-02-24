@@ -36,7 +36,7 @@ class PayWayMetaSerializer(serializers.ModelSerializer):
 
 class UserPayWayMetaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PayWayKeys
+        model = PayWayMetaData
         fields = "__all__"
 
     def create(self, validated_data):
