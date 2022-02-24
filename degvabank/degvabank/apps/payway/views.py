@@ -44,5 +44,5 @@ class PaywayMetaViewSet(viewsets.ModelViewSet):
 class UserPayWayMetaListCreateView(generics.ListCreateAPIView):
 
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-    serializer_class = UserPayWayKeysSerializer
+    serializer_class = UserPayWayMetaSerializer
     permission_classes = (IsAuthenticated,)
