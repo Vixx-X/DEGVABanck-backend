@@ -72,6 +72,9 @@ urlpatterns = [
     # transaction
     path('', include(('degvabank.apps.transaction.urls', "degvabank.apps.transaction"), namespace="transaction")),
 
+    # payway
+    path('', include(('degvabank.apps.payway.urls', "degvabank.apps.payway"), namespace="payway")),
+
     # docs
     path('docs/', include(docs_urls)),
 ]

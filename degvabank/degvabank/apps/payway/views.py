@@ -2,7 +2,7 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
-from .serializers import PayWayKeysSerializer, UserPaywayKeysSerializer
+from .serializers import PayWayKeysSerializer, UserPayWayKeysSerializer
 from .models import PayWayKeys
 
 class PaywayKeysViewSet(viewsets.ModelViewSet):
@@ -17,7 +17,7 @@ class PaywayKeysViewSet(viewsets.ModelViewSet):
 class UserPaywayKeysCreateView(generics.CreateAPIView):
 
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-    serializer_class = UserPaywayKeysSerializer
+    serializer_class = UserPayWayKeysSerializer
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
