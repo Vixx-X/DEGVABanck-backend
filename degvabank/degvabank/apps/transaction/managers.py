@@ -38,6 +38,12 @@ class TransactionMixin:
         transaction.save()
         return transaction
 
+    def process_outside_transaction(self, transaction):
+        pass
+
+    def process_transaction(self, transaction):
+        return self.process_in_house_transaction(transaction)
+
 
 class TransactionManager(TransactionMixin, models.Manager):
     def create(self,**kwargs):
