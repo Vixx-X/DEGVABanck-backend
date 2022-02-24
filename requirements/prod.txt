@@ -35,4 +35,5 @@ django-credit-cards==0.4.1
 cryptography==36.0.1
 
 # admin charts
+git+https://github.com/Vixx-X/django-cache-utils.git
 django-admin-charts==0.25.2

@@ -1,0 +1,2 @@
+# admin charts
+djcacheutils==3.0.0
