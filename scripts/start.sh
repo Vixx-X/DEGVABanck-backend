@@ -31,6 +31,12 @@ function setup_db {
 
 	echo "createsuperuser (asking for passwd)"
 	python3 ${DIR}/degvabank/manage.py createsuperuser --username $DATABASE_USER --email "${DATABASE_USER}@dev.com"
+
+	echo "install bower"
+	python3 ${DIR}/degvabank/manage.py bower_install
+
+	echo "collectstatic"
+	python3 ${DIR}/degvabank/manage.py collectstatic
 }
 
 # setup initial venv and pip install the project
