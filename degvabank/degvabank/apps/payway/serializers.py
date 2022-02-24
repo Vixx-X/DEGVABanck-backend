@@ -10,6 +10,12 @@ class PayWayKeysSerializer(serializers.ModelSerializer):
 
 
 class UserPayWayKeysSerializer(serializers.ModelSerializer):
+
+    owner = serializers.HiddenField(
+        default=serializers.CurrentUserDefault(),
+        write_only=True,
+    )
+
     class Meta:
         model = PayWayKeys
         read_only_fields = [
@@ -19,4 +25,5 @@ class UserPayWayKeysSerializer(serializers.ModelSerializer):
         fields = [
             "public",
             "private",
+            "owner",
         ]

@@ -9,7 +9,7 @@ class PayWayKeys(models.Model):
         "user.User",
         verbose_name=_("key pair owner"),
         on_delete=models.CASCADE,
-        related_name="key_pairs",
+        related_name="key_pair",
     )
 
     public = models.CharField(
