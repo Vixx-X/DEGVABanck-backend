@@ -5,12 +5,11 @@ from .utils import decrypt, encrypt, gen_key_pair
 
 class PayWayKeys(models.Model):
 
-    owner = models.ForeignKey(
+    owner = models.OneToOneField(
         "user.User",
         verbose_name=_("key pair owner"),
         on_delete=models.CASCADE,
         related_name="key_pairs",
-        unique=True,
     )
 
     public = models.CharField(
