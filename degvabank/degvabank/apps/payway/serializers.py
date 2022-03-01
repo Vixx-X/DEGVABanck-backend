@@ -47,7 +47,7 @@ class UserPayWayMetaSerializer(serializers.ModelSerializer):
     api_keys = serializers.SerializerMethodField()
 
     def get_api_keys(self, obj) -> ApiKey:
-        keys = obj.keys
+        keys = obj.keys.first()
         if not keys:
             return {"public":"", "private":""}
         return {
