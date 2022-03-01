@@ -49,6 +49,6 @@ class UserPayWayMetaViewSet(viewsets.ModelViewSet):
     lookup_field = 'app_name'
 
     def get_queryset(self):
-        return super().get_queryset().filter(account__owner=self.request.user)
+        return super().get_queryset().filter(account__user_id=self.request.user.id)
 
 
