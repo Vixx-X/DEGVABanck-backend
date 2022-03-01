@@ -33,6 +33,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         if not (self.acc or self.card):
             raise serializers.ValidationError(_("Source account or card"))
         return value
+
     def validate_target(self, value):
         dst_acc = Account.objects.filter(id=value, is_active=True).first()
         dst_card = CreditCard.objects.filter(number=value, is_active=True).first()
@@ -42,7 +43,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         return value
 
     def validate_document_id(self, value):
-        if self.dst and self.dst.user.document_id != value:
+        if self.dst and self.dst.user.document_id.lower() != str(value).lower():
             raise serializers.ValidationError(_("Target account or card is not associated with that document id"))
         return value
 
