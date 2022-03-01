@@ -18,6 +18,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
+
 class UserAccountListCreateView(generics.ListCreateAPIView):
     """
     List and create user accounts
@@ -27,7 +28,7 @@ class UserAccountListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.accounts.all()
+        return self.request.user.accounts.filter(is_active=True)
 
     def perform_create(self, serializer):
         obj = serializer.save()
@@ -50,4 +51,4 @@ class UserAccountView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.accounts.all()
+        return self.request.user.accounts.filter(is_active=True)

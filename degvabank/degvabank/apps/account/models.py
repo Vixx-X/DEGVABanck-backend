@@ -86,6 +86,9 @@ class Account(models.Model):
         self.id = self.id or self.generate_account_number()
         return super().save(*args, **kwargs)
 
+    def get_active_cards(self):
+        return self.cards.filter(is_active=True)
+
     class Meta:
         app_label = "account"
         db_table = "accounts"
