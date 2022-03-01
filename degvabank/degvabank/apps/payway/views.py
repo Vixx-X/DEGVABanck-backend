@@ -45,9 +45,10 @@ class UserPayWayMetaViewSet(viewsets.ModelViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserPayWayMetaSerializer
     permission_classes = (IsAuthenticated,)
-    queryset = PayWayMetaData.objects.all()
+    queryset = PayWayMetaData.objects.all().order_by("date_created")
+    lookup_field = 'app_name'
 
     def get_queryset(self):
-        return PayWayMetaData.objects.filter(account__owner=self.request.user)
+        return super().get_queryset().filter(account__owner=self.request.user)
 
 

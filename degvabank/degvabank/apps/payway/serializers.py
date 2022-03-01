@@ -40,3 +40,4 @@ class UserPayWayMetaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayWayMetaData
         fields = "__all__"
+        lookup_field = 'app_name'

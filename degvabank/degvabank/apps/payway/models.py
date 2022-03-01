@@ -8,6 +8,7 @@ class PayWayMetaData(models.Model):
     app_name = models.CharField(
         _("app name"),
         max_length=255,
+        unique=True,
     )
 
     account = models.ForeignKey(
@@ -26,6 +27,12 @@ class PayWayMetaData(models.Model):
 
     fail = models.URLField(
         _("fail url"),
+    )
+
+    date_created = models.DateField(
+        _("date created"),
+        auto_now_add=True,
+        db_index=True,
     )
 
     def __str__(self):
