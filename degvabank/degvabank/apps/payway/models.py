@@ -38,6 +38,8 @@ class PayWayKeys(models.Model):
     meta_data = models.ForeignKey(
         PayWayMetaData,
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
 
     owner = models.OneToOneField(
