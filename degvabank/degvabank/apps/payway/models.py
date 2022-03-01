@@ -40,6 +40,10 @@ class PayWayMetaData(models.Model):
         db_index=True,
     )
 
+    @property
+    def user(self):
+        return self.account.user
+
     def get_app_name_slug(self):
         return slugify(self.app_name)
 
