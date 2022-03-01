@@ -11,13 +11,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('account', '0001_initial'),
+        ('petitions', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='account',
+            model_name='petition',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='accounts', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='petitions', to=settings.AUTH_USER_MODEL),
         ),
     ]

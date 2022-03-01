@@ -7,24 +7,28 @@ from . import views
 router = routers.DefaultRouter()
 router.register(
     r"payway-keys",
-    views.PaywayKeysViewSet,
+    views.PayWayKeysViewSet,
 )
 router.register(
     r"payway-meta",
-    views.PaywayMetaViewSet,
+    views.PayWayMetaViewSet,
+)
+user_router = routers.DefaultRouter()
+user_router.register(
+    r"user-payway-meta",
+    views.UserPayWayMetaViewSet,
 )
 
 
 user_payway_urls = [
     path(
         "payway-keys/",
-        views.UserPaywayKeysCreateView.as_view(),
+        views.UserPayWayKeysCreateView.as_view(),
         name="user-payway-key",
     ),
     path(
-        "payway-meta/",
-        views.UserPayWayMetaListCreateView.as_view(),
-        name="user-payway-meta",
+        "",
+        include(user_router.urls)
     ),
 ]
 

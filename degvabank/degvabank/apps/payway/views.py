@@ -4,9 +4,8 @@ from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 from .serializers import PayWayKeysSerializer, UserPayWayKeysSerializer, PayWayMetaSerializer, UserPayWayMetaSerializer
 from .models import PayWayKeys, PayWayMetaData
-from ..user.models import User
 
-class PaywayKeysViewSet(viewsets.ModelViewSet):
+class PayWayKeysViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for payway keys
     """
@@ -15,7 +14,8 @@ class PaywayKeysViewSet(viewsets.ModelViewSet):
     queryset = PayWayKeys.objects.all()
     serializer_class = PayWayKeysSerializer
 
-class UserPaywayKeysCreateView(generics.CreateAPIView):
+
+class UserPayWayKeysCreateView(generics.CreateAPIView):
 
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserPayWayKeysSerializer
@@ -24,13 +24,13 @@ class UserPaywayKeysCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         try:
             # may not exist
-            request.user.key_pair.delete()
-        except User.key_pair.RelatedObjectDoesNotExist:
+            request.user.key_pairs.get(pk=request.data["meta_data"]).delete()
+        except:
             pass
         return super().create(request, *args, **kwargs)
 
 
-class PaywayMetaViewSet(viewsets.ModelViewSet):
+class PayWayMetaViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for payway keys
     """
@@ -40,9 +40,14 @@ class PaywayMetaViewSet(viewsets.ModelViewSet):
     serializer_class = PayWayMetaSerializer
 
 
-
-class UserPayWayMetaListCreateView(generics.ListCreateAPIView):
+class UserPayWayMetaViewSet(viewsets.ModelViewSet):
 
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserPayWayMetaSerializer
     permission_classes = (IsAuthenticated,)
+    queryset = PayWayMetaData.objects.all()
+
+    def get_queryset(self):
+        return PayWayMetaData.objects.filter(account__owner=self.request.user)
+
+

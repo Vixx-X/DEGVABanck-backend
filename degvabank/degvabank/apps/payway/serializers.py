@@ -23,10 +23,12 @@ class UserPayWayKeysSerializer(serializers.ModelSerializer):
             "private",
         ]
         fields = [
+            "meta_data",
             "public",
             "private",
             "owner",
         ]
+
 
 class PayWayMetaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,7 +40,3 @@ class UserPayWayMetaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayWayMetaData
         fields = "__all__"
-
-    def create(self, validated_data):
-        instance, _ = self.Meta.model.objects.get_or_create(**validated_data)
-        return instance
