@@ -1,5 +1,8 @@
+from typing import TypedDict
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+
+from degvabank.apps.payway.utils import censor_key
 
 from .models import PayWayKeys, PayWayMetaData
 
@@ -23,7 +26,6 @@ class UserPayWayKeysSerializer(serializers.ModelSerializer):
             "private",
         ]
         fields = [
-            "meta_data",
             "public",
             "private",
             "owner",
@@ -36,8 +38,29 @@ class PayWayMetaSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ApiKey(TypedDict):
+    public : str
+    private : str
+
 class UserPayWayMetaSerializer(serializers.ModelSerializer):
+
+    api_keys = serializers.SerializerMethodField()
+
+    def get_api_keys(self, obj) -> ApiKey:
+        keys = obj.keys
+        if not keys:
+            return {"public":"", "private":""}
+        return {
+            "public":censor_key(keys.public),
+            "private":censor_key(keys.private)
+        }
+
+    transactions = serializers.SerializerMethodField()
+
+    def get_transactions(self, obj) -> int:
+        return 0
+
     class Meta:
         model = PayWayMetaData
-        fields = "__all__"
-        lookup_field = 'app_name'
+        exclude = ["id"]
+        lookup_field="app_id"

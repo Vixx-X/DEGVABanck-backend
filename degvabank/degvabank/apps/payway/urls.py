@@ -15,14 +15,14 @@ router.register(
 )
 user_router = routers.DefaultRouter()
 user_router.register(
-    r"user-payway-meta",
+    r"payway-meta",
     views.UserPayWayMetaViewSet,
 )
 
 
 user_payway_urls = [
     path(
-        "payway-keys/",
+        "payway-meta/<slug:app_id>/keys/",
         views.UserPayWayKeysCreateView.as_view(),
         name="user-payway-key",
     ),

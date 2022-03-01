@@ -1,14 +1,19 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.template.defaultfilters import slugify
 
 from .utils import decrypt, encrypt, gen_key_pair
 
 class PayWayMetaData(models.Model):
 
+    app_id = models.SlugField(
+        _("app id"),
+        unique=True,
+    )
+
     app_name = models.CharField(
         _("app name"),
         max_length=255,
-        unique=True,
     )
 
     account = models.ForeignKey(
@@ -35,6 +40,14 @@ class PayWayMetaData(models.Model):
         db_index=True,
     )
 
+    def get_app_name_slug(self):
+        return slugify(self.app_name)
+
+    def save(self, *args, **kwargs):
+        if not self.app_id:
+            self.app_id = self.get_app_name_slug()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Bussiness pay way of {self.app_name}"
 
@@ -50,6 +63,7 @@ class PayWayKeys(models.Model):
     meta_data = models.ForeignKey(
         PayWayMetaData,
         on_delete=models.CASCADE,
+        related_name="keys",
     )
 
     owner = models.OneToOneField(
