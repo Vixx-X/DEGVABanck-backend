@@ -75,6 +75,9 @@ urlpatterns = [
     # transaction
     path('', include(('degvabank.apps.transaction.urls', "degvabank.apps.transaction"), namespace="transaction")),
 
+    # transaction
+    path('', include(('degvabank.apps.petitions.urls', "degvabank.apps.petitions"), namespace="petition")),
+
     # payway
     path('', include(('degvabank.apps.payway.urls', "degvabank.apps.payway"), namespace="payway")),
 
