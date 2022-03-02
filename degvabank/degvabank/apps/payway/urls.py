@@ -32,6 +32,19 @@ user_payway_urls = [
     ),
 ]
 
+paygateway_urls = [
+    path(
+        "paygateway/account/",
+        views.PayGateWayAccount.as_view(),
+        name="paygateway-account",
+    ),
+    path(
+        "paygateway/card/",
+        views.PayGateWayCard.as_view(),
+        name="paygateway-card",
+    ),
+]
+
 urlpatterns = [
     path(
         "user/",
@@ -41,4 +54,8 @@ urlpatterns = [
         "",
         include(router.urls),
     ),
+    path(
+        "",
+        include(paygateway_urls),
+    )
 ]

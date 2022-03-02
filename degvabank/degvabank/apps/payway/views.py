@@ -1,9 +1,8 @@
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
-from rest_framework.response import Response
 
-from .serializers import PayWayKeysSerializer, UserPayWayKeysSerializer, PayWayMetaSerializer, UserPayWayMetaSerializer
+from .serializers import PayWayKeysSerializer, PayWayTransaction, PayWayTransactionAccount, PayWayTransactionCreditCard, UserPayWayKeysSerializer, PayWayMetaSerializer, UserPayWayMetaSerializer
 from .models import PayWayKeys, PayWayMetaData
 
 class PayWayKeysViewSet(viewsets.ModelViewSet):
@@ -56,4 +55,13 @@ class UserPayWayMetaViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return super().get_queryset().filter(account__user_id=self.request.user.id)
 
+
+class PayGateWayAccount(generics.CreateAPIView):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = PayWayTransactionAccount
+    permission_classes = (IsAuthenticated,)
+
+class PayGateWayCard(generics.CreateAPIView):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = PayWayTransactionCreditCard
 

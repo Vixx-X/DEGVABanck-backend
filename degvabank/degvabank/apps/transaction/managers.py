@@ -59,4 +59,4 @@ class TransactionManager(TransactionMixin, models.Manager):
 
     def create(self,**kwargs):
         transaction = self.model(**kwargs)
-        return self.process_in_house_transaction(transaction)
+        return self.process_transaction(transaction)

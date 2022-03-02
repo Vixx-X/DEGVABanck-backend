@@ -40,6 +40,8 @@ class PayWayMetaData(models.Model):
         db_index=True,
     )
 
+    transactions = models.ManyToManyField("transaction.Transaction")
+
     @property
     def user(self):
         return self.account.user

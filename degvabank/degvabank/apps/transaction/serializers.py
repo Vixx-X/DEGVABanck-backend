@@ -31,10 +31,12 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         self.acc = user.accounts.filter(id=value, is_active=True).first()
         self.card = user.credit_cards.filter(number=value, is_active=True).first()
         if not (self.acc or self.card):
-            raise serializers.ValidationError(_("Source account or card"))
+            raise serializers.ValidationError(_("Invalid source account or card"))
         return value
 
     def validate_target(self, value):
+        # TODO: if value not ours: return value
+
         dst_acc = Account.objects.filter(id=value, is_active=True).first()
         dst_card = CreditCard.objects.filter(number=value, is_active=True).first()
         if not (dst_acc or dst_card):

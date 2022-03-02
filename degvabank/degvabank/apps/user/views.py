@@ -221,13 +221,6 @@ class RegistrationView(APIView):
     """
     API for registering users
 
-    POST(email, password1, password2):
-    {
-        "email": "user@my-domain.com",
-        "password1": "MyVerySecretPassword123"
-        "password2": "MyVerySecretPassword123"
-    }
-
     Will create a new user when the user with the specific email does
     not exist (HTTP_201_CREATED).
 
