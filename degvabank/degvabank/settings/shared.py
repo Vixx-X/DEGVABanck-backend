@@ -79,7 +79,7 @@ INSTALLED_APPS = [
     'degvabank.apps.payway.apps.PaywayConfig',
 
     ## 3rd parties ##
-
+    'django_filters',
     'rest_framework',
 
     # jwt
@@ -229,7 +229,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "DEFAULT_FILTER_BACKENDS": ["rest_framework.filters.OrderingFilter"],
+    "DEFAULT_FILTER_BACKENDS": ["rest_framework.filters.OrderingFilter", "django_filters.rest_framework.DjangoFilterBackend"],
     "PAGE_SIZE": 10,
     # "NON_FIELD_ERRORS_KEY": "general_error",
     'EXCEPTION_HANDLER': 'degvabank.core.exception_handler.default_handler'
