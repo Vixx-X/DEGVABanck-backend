@@ -22,19 +22,17 @@ class UserPayWayKeysCreateView(generics.CreateAPIView):
     serializer_class = UserPayWayKeysSerializer
     permission_classes = (IsAuthenticated,)
 
-    def create(self, request):
-        meta_data = generics.get_object_or_404(PayWayMetaData, app_id=self.kwargs.get("app_id"))
+    def perform_create(self, serializer):
+        serializer.save(meta_data=self.meta_data)
+
+    def create(self, request, **kwargs):
+        self.meta_data = generics.get_object_or_404(PayWayMetaData, app_id=kwargs.get("app_id"))
         try:
             # may not exist
-            request.user.key_pairs.get(meta_data_id=meta_data.id).delete()
+            request.user.key_pairs.get(meta_data_id=self.meta_data.id).delete()
         except:
             pass
-        data = {"meta_data": meta_data.id, **request.data}
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return super().create(request)
 
 
 class PayWayMetaViewSet(viewsets.ModelViewSet):

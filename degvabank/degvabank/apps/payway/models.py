@@ -70,7 +70,7 @@ class PayWayKeys(models.Model):
         related_name="keys",
     )
 
-    owner = models.OneToOneField(
+    owner = models.ForeignKey(
         "user.User",
         verbose_name=_("key pair owner"),
         on_delete=models.CASCADE,
