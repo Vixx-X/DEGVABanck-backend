@@ -43,7 +43,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         return value
 
     def validate_document_id(self, value):
-        if self.dst and self.dst.user.document_id != value:
+        if self.dst and self.dst.user.document_id.lower() != str(value).lower():
             raise serializers.ValidationError(_("Target account or card is not associated with that document id"))
         return value
 

@@ -17,6 +17,7 @@ class CreditCardViewSet(viewsets.ModelViewSet):
     queryset = CreditCard.objects.all()
     serializer_class = CreditCardSerializer
 
+
 class UserCreditCardListCreateView(generics.ListCreateAPIView):
     """
     List user credit cards
@@ -27,7 +28,7 @@ class UserCreditCardListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.credit_cards.all()
+        return self.request.user.credit_cards.filter(is_active=True)
 
     def perform_create(self, serializer):
         obj = serializer.save()
@@ -36,6 +37,7 @@ class UserCreditCardListCreateView(generics.ListCreateAPIView):
             reason=Petition.ReasonType.CREATE_CREDIT_CARD,
             user=self.request.user
         )
+
 
 class UserCreditCardView(generics.RetrieveAPIView):
     """
@@ -46,7 +48,7 @@ class UserCreditCardView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.request.user.credit_cards.all()
+        return self.request.user.credit_cards.filter(is_active=True)
 
 
 # debit
@@ -70,7 +72,7 @@ class UserDebitCardListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return DebitCard.objects.filter(account__user=self.request.user)
+        return DebitCard.objects.filter(account__user=self.request.user, is_active=True)
 
     def perform_create(self, serializer):
         obj = serializer.save()
@@ -89,5 +91,5 @@ class UserDebitCardView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return DebitCard.objects.filter(account__user=self.request.user)
+        return DebitCard.objects.filter(account__user=self.request.user, is_active=True)
 

@@ -19,7 +19,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
-    cards = UserDebitCardSerializer(many=True, read_only=True)
+    cards = UserDebitCardSerializer(source="get_active_cards", many=True, read_only=True)
 
     def get_id(self, obj):
         return obj.pretty_account_number
