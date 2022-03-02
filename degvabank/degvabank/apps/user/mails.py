@@ -1,9 +1,15 @@
 from simple_mail.mailer import BaseSimpleMail, simple_mailer
+
+from degvabank.apps.transaction.models import Transaction
 from .models import User
 
 class EMAIL_TYPES:
     WELCOME = "welcome"
     SEND_OTP = "send_otp"
+    TRANS_RECEIVE = "transaction receive"
+    TRANS_SENT = "transaction sent"
+    RESET_PASS = "reset password"
+    CHANGE_USER = "change user"
 
 
 class BaseSimpleMail(BaseSimpleMail):
@@ -37,5 +43,52 @@ class SendOTPMail(BaseSimpleMail):
         super().set_context(ctx=ctx)
 
 
+class TransactionReceiveMail(BaseSimpleMail):
+    email_key = EMAIL_TYPES.TRANS_RECEIVE
+    context = {
+        "user": "admin",
+        "transaction": Transaction.get_dommy()
+    }
+
+    def set_context(self, user, transaction):
+        ctx={ "user":user, "transaction":transaction }
+        return super().set_context(ctx)
+
+class TransactionSentMail(BaseSimpleMail):
+    email_key = EMAIL_TYPES.TRANS_SENT
+    context = {
+        "user": "admin",
+        "transaction": Transaction.get_dommy()
+    }
+
+    def set_context(self, user, transaction):
+        ctx={ "user":user, "transaction":transaction }
+        return super().set_context(ctx)
+
+class ResetPasswordMail(BaseSimpleMail):
+    email_key = EMAIL_TYPES.RESET_PASS
+    context = {
+        "user": "admin",
+        "url": "http://localhost:8000/admin"
+    }
+
+    def set_context(self, user, url):
+        ctx={ "user":user, "url":url }
+        return super().set_context(ctx)
+
+class ResetUserMail(BaseSimpleMail):
+    email_key = EMAIL_TYPES.CHANGE_USER
+    context = {
+        "user": "admin"
+    }
+
+    def set_context(self, user):
+        ctx={ "user":user }
+        return super().set_context(ctx)
+
 simple_mailer.register(WelcomeMail)
 simple_mailer.register(SendOTPMail)
+simple_mailer.register(TransactionReceiveMail)
+simple_mailer.register(TransactionSentMail)
+simple_mailer.register(ResetPasswordMail)
+simple_mailer.register(ResetUserMail)

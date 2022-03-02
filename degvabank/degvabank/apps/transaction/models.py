@@ -97,6 +97,15 @@ class Transaction(models.Model):
 
     objects = TransactionManager()
 
+    @classmethod
+    def get_dommy(cls):
+        return cls(type=cls.TransactionType.ACCOUNTS,
+                   status=cls.TransactionStatus.ACCEPTED,
+                   amount=100,
+                   reason="Transaction TEST",
+                   target="1234567890123456",
+                   source="1234567890123456",)
+
     class Meta:
         app_label = "transaction"
         db_table = "transactions"
