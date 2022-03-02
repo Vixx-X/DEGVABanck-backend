@@ -25,7 +25,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
         return obj.pretty_account_number
 
     def validate(self, attrs):
-        if Petition.objects.filter(user=attrs['user'], reason=Petition.ReasonType.OPEN_ACCOUNT).exists():
+        if Petition.objects.filter(user=attrs['user'], reason=Petition.ReasonType.OPEN_ACCOUNT, status=Petition.PetitionStatus.PENDING).exists():
             raise ValidationError(
                 _("you cannot have 2 pending accounts"),
                 code="petition already exist",
