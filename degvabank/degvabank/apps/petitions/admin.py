@@ -15,6 +15,7 @@ def pending(modeladmin, request, queryset):
 
 @admin.register(Petition)
 class PetitionListAdmin(admin.ModelAdmin):
+    search_fields = ("user__username__startswith", "user__first_name__startswith", "id__startswith")
     list_display = ("id", "reason","status", "date_processed", "date_created", "user")
-    list_filter = ("reason", "date_processed", "date_created", "status", "user")
+    list_filter = ("reason", "date_processed", "date_created", "status")
     actions = [approve, denied, pending]
