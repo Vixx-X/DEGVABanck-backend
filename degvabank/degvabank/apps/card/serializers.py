@@ -19,6 +19,7 @@ class UserCreditCardSerializer(serializers.ModelSerializer):
             "number",
             "security_code",
             "expiration_date",
+            "credit_limit",
             "credit",
             "user",
         ]
