@@ -124,15 +124,20 @@ TEMPLATES = [
         "DIRS": [str(BASE_DIR / "templates"),],
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
+            "django.contrib.auth.context_processors.auth",
+            "django.contrib.messages.context_processors.messages",
+            "django.template.context_processors.debug",
+            "django.template.context_processors.i18n",
+            "django.template.context_processors.media",
+            "django.template.context_processors.static",
+            "django.template.context_processors.csrf",
+            "django.template.context_processors.tz",
+            "django.template.context_processors.request",
+        ],
             "loaders": [
+                "admin_tools.template_loaders.Loader",
                 "django.template.loaders.filesystem.Loader",
                 "django.template.loaders.app_directories.Loader",
-                "admin_tools.template_loaders.Loader",
             ],
         },
     },
@@ -190,7 +195,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     str(BASE_DIR / "static"),
 ]
