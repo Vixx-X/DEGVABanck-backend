@@ -17,3 +17,4 @@ class AccountManager(models.Manager):
             reason=Petition.ReasonType.OPEN_ACCOUNT,
             user=self.request.user,
         )
+        return obj

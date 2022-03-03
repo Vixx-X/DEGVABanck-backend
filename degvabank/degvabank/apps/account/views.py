@@ -1,9 +1,6 @@
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
-from degvabank.apps.card.models import DebitCard
-
-from degvabank.apps.petitions.models import Petition
 
 from .serializers import AccountSerializer, UserAccountSerializer
 from .models import Account

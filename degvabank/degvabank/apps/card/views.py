@@ -43,6 +43,7 @@ class UserCreditCardListCreateView(generics.ListCreateAPIView):
             reason=Petition.ReasonType.CREATE_CREDIT_CARD,
             user=self.request.user,
         )
+        return obj
 
 
 class UserCreditCardView(generics.RetrieveAPIView):
@@ -90,6 +91,7 @@ class UserDebitCardListCreateView(generics.ListCreateAPIView):
             reason=Petition.ReasonType.CREATE_DEBIT_CARD,
             user=self.request.user,
         )
+        return obj
 
 
 class UserDebitCardView(generics.RetrieveAPIView):
