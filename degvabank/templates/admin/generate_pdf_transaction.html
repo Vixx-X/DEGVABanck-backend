@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Test</title>
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Transaction</h1>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Source</td>
+            <td>Target</td>
+            <td>Amount</td>
+            <td>Date</td>
+        </tr>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{transaction.id}}</td>
+            <td>********{{transaction.source|slice:"-5:"}}</td>
+            <td>********{{transaction.target|slice:"-5:"}}</td>
+            <td>{{transaction.amount}}</td>
+            <td>{{transaction.date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+</body>
+
+</html>

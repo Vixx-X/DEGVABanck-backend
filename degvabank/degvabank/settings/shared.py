@@ -121,7 +121,7 @@ ROOT_URLCONF = "degvabank.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [str(BASE_DIR / "templates"),],
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
