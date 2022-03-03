@@ -2,7 +2,9 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
-from .serializers import PayWayKeysSerializer, PayWayTransaction, PayWayTransactionAccount, PayWayTransactionCreditCard, UserPayWayKeysSerializer, PayWayMetaSerializer, UserPayWayMetaSerializer
+from degvabank.apps.transaction.serializers import UserTransactionSerializer
+
+from .serializers import PayWayKeysSerializer, PayWayTransactionAccount, PayWayTransactionCreditCard, UserPayWayKeysSerializer, PayWayMetaSerializer, UserPayWayMetaSerializer
 from .models import PayWayKeys, PayWayMetaData
 
 class PayWayKeysViewSet(viewsets.ModelViewSet):
@@ -51,6 +53,14 @@ class UserPayWayMetaViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = PayWayMetaData.objects.all().order_by("date_created")
     lookup_field="app_id"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(account__user_id=self.request.user.id)
+
+class UserPayWayMetaTransactionList(generics.ListAPIView):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = UserTransactionSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return super().get_queryset().filter(account__user_id=self.request.user.id)

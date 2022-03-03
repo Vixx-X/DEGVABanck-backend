@@ -89,9 +89,9 @@ class PayWayTransaction(serializers.ModelSerializer):
         if not data:
             raise ProgrammingError(_("make sure to use get_transaction_kwargs on save"))
         return {
-            "ammount": data["ammount"],
+            "amount": data["amount"],
             "reason": data["reason"],
-            "target": self.key_obj.account.id,
+            "target": self.key_obj.meta_data.account.id,
             "source": self.get_transaction_source(),
         }
 
@@ -115,7 +115,7 @@ class PayWayTransactionAccount(PayWayTransaction):
         data = self.validated_data
         if not data:
             raise ProgrammingError(_("make sure to use get_transaction_kwargs on save"))
-        return data["account"]["number"]
+        return data["account"]["id"]
 
     def save(self):
         tran = Transaction.objects.create(**self.get_transaction_kwargs())
@@ -124,6 +124,7 @@ class PayWayTransactionAccount(PayWayTransaction):
 
 
 class PayWayTransactionFromCreditCard(serializers.ModelSerializer):
+    number = serializers.CharField()
     class Meta:
         model = CreditCard
         fields = ["number", "security_code", "expiration_date"]
