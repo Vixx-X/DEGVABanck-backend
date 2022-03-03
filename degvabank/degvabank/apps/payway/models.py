@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 
 from .utils import decrypt, encrypt, gen_key_pair
 
+
 class PayWayMetaData(models.Model):
 
     app_id = models.SlugField(
@@ -39,6 +40,8 @@ class PayWayMetaData(models.Model):
         auto_now_add=True,
         db_index=True,
     )
+
+    transactions = models.ManyToManyField("transaction.Transaction")
 
     @property
     def user(self):
@@ -78,10 +81,7 @@ class PayWayKeys(models.Model):
     )
 
     public = models.CharField(
-        _("publishable key"),
-        max_length=64,
-        primary_key=True,
-        editable=False
+        _("publishable key"), max_length=64, primary_key=True, editable=False
     )
 
     private = models.CharField(
@@ -108,5 +108,3 @@ class PayWayKeys(models.Model):
         db_table = "payway_keys"
         verbose_name = _("pay way key")
         verbose_name_plural = _("pay way keys")
-
-

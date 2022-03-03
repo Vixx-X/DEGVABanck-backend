@@ -13,6 +13,7 @@ from django_otp import verify_token
 from .models import User
 from degvabank.apps.account.models import Account
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -30,6 +31,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
         ]
+
 
 def get_password_reset_url(user, token_generator=default_token_generator):
     """
@@ -91,7 +93,7 @@ class PasswordSerializer(serializers.Serializer):
 
     def __init__(self, instance=None, data=None, **kwargs):
         super().__init__(instance=instance, data=data, **kwargs)
-        self.user = self.context['request'].user
+        self.user = self.context["request"].user
 
     def validate(self, attrs):
         password1 = attrs["new_password1"]
@@ -123,18 +125,20 @@ class OTPChallengeSerializer(serializers.Serializer):
 
     def __init__(self, instance=None, data=None, **kwargs):
         super().__init__(instance=instance, data=data, **kwargs)
-        self.user = self.context['request'].user
-
+        self.user = self.context["request"].user
 
     def validate_token(self, token):
         data = self.get_initial()
-        device = data['device']
-        verified = verify_token(user=self.user, device_id=device, token=token) is not None
+        device = data["device"]
+        verified = (
+            verify_token(user=self.user, device_id=device, token=token) is not None
+        )
         if not verified:
             raise ValidationError(
                 _("The token submitted is invalid."),
                 code="token_invalid",
             )
+
 
 class ChangePasswordSerializer(OTPChallengeSerializer):
     old_password = serializers.CharField(
@@ -198,6 +202,7 @@ class ChangeEmailSerializer(OTPChallengeSerializer):
         self.user.save()
         return self.user
 
+
 class RegisterUserSerializer(UserProfileSerializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
@@ -217,7 +222,6 @@ class RegisterUserSerializer(UserProfileSerializer):
 
         password_validation.validate_password(attrs["password1"])
         return attrs
-
 
     def save(self):
         data = self.validated_data

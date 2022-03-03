@@ -16,7 +16,6 @@ from degvabank.apps.transaction.managers import TransactionManager
 
 
 class Transaction(models.Model):
-
     class TransactionType(models.TextChoices):
         ERROR = "C2C", _("error (credit card to credit card)")
         FROM_CREDIT_CARD = "C2A", _("from credit card to account")
@@ -24,9 +23,7 @@ class Transaction(models.Model):
         ACCOUNTS = "A2A", _("from account to account")
 
     type = models.CharField(
-        _("transaction type"),
-        choices=TransactionType.choices,
-        max_length=4
+        _("transaction type"), choices=TransactionType.choices, max_length=4
     )
 
     class TransactionStatus(models.TextChoices):
@@ -39,7 +36,7 @@ class Transaction(models.Model):
         _("transaction status"),
         choices=TransactionStatus.choices,
         default=TransactionStatus.PENDING,
-        max_length=4
+        max_length=4,
     )
 
     amount = models.DecimalField(
@@ -66,7 +63,7 @@ class Transaction(models.Model):
                 regex=r"^(\d{16}|\d{20})$",
                 message=_("not a valid account or credit card"),
             ),
-        ]
+        ],
     )
 
     source = models.CharField(
@@ -77,7 +74,7 @@ class Transaction(models.Model):
                 regex=r"^(\d{16}|\d{20})$",
                 message=_("not a valid account or credit card"),
             ),
-        ]
+        ],
     )
 
     def __init__(self, *args, **kwargs):
@@ -99,12 +96,14 @@ class Transaction(models.Model):
 
     @classmethod
     def get_dommy(cls):
-        return cls(type=cls.TransactionType.ACCOUNTS,
-                   status=cls.TransactionStatus.ACCEPTED,
-                   amount=100,
-                   reason="Transaction TEST",
-                   target="1234567890123456",
-                   source="1234567890123456",)
+        return cls(
+            type=cls.TransactionType.ACCOUNTS,
+            status=cls.TransactionStatus.ACCEPTED,
+            amount=100,
+            reason="Transaction TEST",
+            target="1234567890123456",
+            source="1234567890123456",
+        )
 
     class Meta:
         app_label = "transaction"

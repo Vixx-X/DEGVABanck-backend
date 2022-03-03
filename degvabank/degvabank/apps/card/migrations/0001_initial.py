@@ -10,40 +10,113 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('account', '0001_initial'),
+        ("account", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CreditCard',
+            name="CreditCard",
             fields=[
-                ('number', creditcards.models.CardNumberField(editable=False, max_length=25, primary_key=True, serialize=False, verbose_name='card number')),
-                ('is_active', models.BooleanField(db_index=True, default=True, help_text='card should be used by owner?', verbose_name='card is active')),
-                ('security_code', creditcards.models.SecurityCodeField(max_length=4, verbose_name='security code')),
-                ('expiration_date', creditcards.models.CardExpiryField(verbose_name='expiration date')),
-                ('date_created', models.DateField(auto_now_add=True, db_index=True, verbose_name='date created')),
-                ('credit', models.DecimalField(decimal_places=2, max_digits=12, verbose_name='credits')),
+                (
+                    "number",
+                    creditcards.models.CardNumberField(
+                        editable=False,
+                        max_length=25,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="card number",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        db_index=True,
+                        default=True,
+                        help_text="card should be used by owner?",
+                        verbose_name="card is active",
+                    ),
+                ),
+                (
+                    "security_code",
+                    creditcards.models.SecurityCodeField(
+                        max_length=4, verbose_name="security code"
+                    ),
+                ),
+                (
+                    "expiration_date",
+                    creditcards.models.CardExpiryField(verbose_name="expiration date"),
+                ),
+                (
+                    "date_created",
+                    models.DateField(
+                        auto_now_add=True, db_index=True, verbose_name="date created"
+                    ),
+                ),
+                (
+                    "credit",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=12, verbose_name="credits"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'credit card',
-                'verbose_name_plural': 'credit cards',
-                'db_table': 'credit_cards',
+                "verbose_name": "credit card",
+                "verbose_name_plural": "credit cards",
+                "db_table": "credit_cards",
             },
         ),
         migrations.CreateModel(
-            name='DebitCard',
+            name="DebitCard",
             fields=[
-                ('number', creditcards.models.CardNumberField(editable=False, max_length=25, primary_key=True, serialize=False, verbose_name='card number')),
-                ('is_active', models.BooleanField(db_index=True, default=True, help_text='card should be used by owner?', verbose_name='card is active')),
-                ('security_code', creditcards.models.SecurityCodeField(max_length=4, verbose_name='security code')),
-                ('expiration_date', creditcards.models.CardExpiryField(verbose_name='expiration date')),
-                ('date_created', models.DateField(auto_now_add=True, db_index=True, verbose_name='date created')),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='cards', to='account.account', verbose_name='account')),
+                (
+                    "number",
+                    creditcards.models.CardNumberField(
+                        editable=False,
+                        max_length=25,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="card number",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        db_index=True,
+                        default=True,
+                        help_text="card should be used by owner?",
+                        verbose_name="card is active",
+                    ),
+                ),
+                (
+                    "security_code",
+                    creditcards.models.SecurityCodeField(
+                        max_length=4, verbose_name="security code"
+                    ),
+                ),
+                (
+                    "expiration_date",
+                    creditcards.models.CardExpiryField(verbose_name="expiration date"),
+                ),
+                (
+                    "date_created",
+                    models.DateField(
+                        auto_now_add=True, db_index=True, verbose_name="date created"
+                    ),
+                ),
+                (
+                    "account",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="cards",
+                        to="account.account",
+                        verbose_name="account",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'debit card',
-                'verbose_name_plural': 'debit cards',
-                'db_table': 'debit_cards',
+                "verbose_name": "debit card",
+                "verbose_name_plural": "debit cards",
+                "db_table": "debit_cards",
             },
         ),
     ]

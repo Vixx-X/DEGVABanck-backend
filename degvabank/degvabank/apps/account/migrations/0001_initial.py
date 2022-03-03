@@ -9,23 +9,64 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Account',
+            name="Account",
             fields=[
-                ('id', degvabank.apps.account.models.AutoAccountIDField(editable=False, max_length=20, primary_key=True, serialize=False, validators=[django.core.validators.RegexValidator(message='not a valid account', regex='00691337\\d{11}[0|1]$')])),
-                ('type', models.CharField(choices=[('CHECKING', 'Checking'), ('SAVING', 'Saving')], max_length=10, verbose_name='type of account (checking, saving)')),
-                ('is_active', models.BooleanField(db_index=True, default=False, help_text='account should be used by owner?', verbose_name='account is active')),
-                ('balance', models.DecimalField(decimal_places=2, default=0, max_digits=12, verbose_name='account balance')),
-                ('date_created', models.DateField(auto_now_add=True, db_index=True, verbose_name='date created')),
+                (
+                    "id",
+                    degvabank.apps.account.models.AutoAccountIDField(
+                        editable=False,
+                        max_length=20,
+                        primary_key=True,
+                        serialize=False,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                message="not a valid account",
+                                regex="00691337\\d{11}[0|1]$",
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("CHECKING", "Checking"), ("SAVING", "Saving")],
+                        max_length=10,
+                        verbose_name="type of account (checking, saving)",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        db_index=True,
+                        default=False,
+                        help_text="account should be used by owner?",
+                        verbose_name="account is active",
+                    ),
+                ),
+                (
+                    "balance",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=0,
+                        max_digits=12,
+                        verbose_name="account balance",
+                    ),
+                ),
+                (
+                    "date_created",
+                    models.DateField(
+                        auto_now_add=True, db_index=True, verbose_name="date created"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'account',
-                'verbose_name_plural': 'accounts',
-                'db_table': 'accounts',
+                "verbose_name": "account",
+                "verbose_name_plural": "accounts",
+                "db_table": "accounts",
             },
         ),
     ]

@@ -1,4 +1,3 @@
-
 from django.urls.conf import path, include
 from rest_framework import routers
 
@@ -26,9 +25,19 @@ user_payway_urls = [
         views.UserPayWayKeysCreateView.as_view(),
         name="user-payway-key",
     ),
+    path("", include(user_router.urls)),
+]
+
+paygateway_urls = [
     path(
-        "",
-        include(user_router.urls)
+        "paygateway/account/",
+        views.PayGateWayAccount.as_view(),
+        name="paygateway-account",
+    ),
+    path(
+        "paygateway/card/",
+        views.PayGateWayCard.as_view(),
+        name="paygateway-card",
     ),
 ]
 
@@ -40,5 +49,9 @@ urlpatterns = [
     path(
         "",
         include(router.urls),
+    ),
+    path(
+        "",
+        include(paygateway_urls),
     ),
 ]

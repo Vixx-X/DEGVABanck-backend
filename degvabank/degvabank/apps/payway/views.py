@@ -1,10 +1,19 @@
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
-from rest_framework.response import Response
 
-from .serializers import PayWayKeysSerializer, UserPayWayKeysSerializer, PayWayMetaSerializer, UserPayWayMetaSerializer
+from degvabank.apps.transaction.serializers import UserTransactionSerializer
+
+from .serializers import (
+    PayWayKeysSerializer,
+    PayWayTransactionAccount,
+    PayWayTransactionCreditCard,
+    UserPayWayKeysSerializer,
+    PayWayMetaSerializer,
+    UserPayWayMetaSerializer,
+)
 from .models import PayWayKeys, PayWayMetaData
+
 
 class PayWayKeysViewSet(viewsets.ModelViewSet):
     """
@@ -26,7 +35,9 @@ class UserPayWayKeysCreateView(generics.CreateAPIView):
         serializer.save(meta_data=self.meta_data)
 
     def create(self, request, **kwargs):
-        self.meta_data = generics.get_object_or_404(PayWayMetaData, app_id=kwargs.get("app_id"))
+        self.meta_data = generics.get_object_or_404(
+            PayWayMetaData, app_id=kwargs.get("app_id")
+        )
         try:
             # may not exist
             request.user.key_pairs.get(meta_data_id=self.meta_data.id).delete()
@@ -51,9 +62,27 @@ class UserPayWayMetaViewSet(viewsets.ModelViewSet):
     serializer_class = UserPayWayMetaSerializer
     permission_classes = (IsAuthenticated,)
     queryset = PayWayMetaData.objects.all().order_by("date_created")
-    lookup_field="app_id"
+    lookup_field = "app_id"
 
     def get_queryset(self):
         return super().get_queryset().filter(account__user_id=self.request.user.id)
 
 
+class UserPayWayMetaTransactionList(generics.ListAPIView):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = UserTransactionSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(account__user_id=self.request.user.id)
+
+
+class PayGateWayAccount(generics.CreateAPIView):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = PayWayTransactionAccount
+    permission_classes = (IsAuthenticated,)
+
+
+class PayGateWayCard(generics.CreateAPIView):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = PayWayTransactionCreditCard

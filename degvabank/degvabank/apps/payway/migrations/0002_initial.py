@@ -11,13 +11,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('payway', '0001_initial'),
+        ("payway", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='paywaykeys',
-            name='owner',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='key_pairs', to=settings.AUTH_USER_MODEL, verbose_name='key pair owner'),
+            model_name="paywaykeys",
+            name="owner",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="key_pairs",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="key pair owner",
+            ),
         ),
     ]

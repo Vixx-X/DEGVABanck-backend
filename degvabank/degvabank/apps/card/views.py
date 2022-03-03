@@ -3,10 +3,16 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from degvabank.apps.petitions.models import Petition
 
-from .serializers import CreditCardSerializer, UserCreditCardSerializer, DebitCardSerializer, UserDebitCardSerializer
+from .serializers import (
+    CreditCardSerializer,
+    UserCreditCardSerializer,
+    DebitCardSerializer,
+    UserDebitCardSerializer,
+)
 from .models import CreditCard, DebitCard
 
 # credit
+
 
 class CreditCardViewSet(viewsets.ModelViewSet):
     """
@@ -35,7 +41,7 @@ class UserCreditCardListCreateView(generics.ListCreateAPIView):
         Petition.objects.create(
             content_object=obj,
             reason=Petition.ReasonType.CREATE_CREDIT_CARD,
-            user=self.request.user
+            user=self.request.user,
         )
 
 
@@ -43,6 +49,7 @@ class UserCreditCardView(generics.RetrieveAPIView):
     """
     Retrieve user credit card
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserCreditCardSerializer
     permission_classes = (IsAuthenticated,)
@@ -53,6 +60,7 @@ class UserCreditCardView(generics.RetrieveAPIView):
 
 # debit
 
+
 class DebitCardViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for debit cards
@@ -61,6 +69,7 @@ class DebitCardViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     queryset = DebitCard.objects.all()
     serializer_class = DebitCardSerializer
+
 
 class UserDebitCardListCreateView(generics.ListCreateAPIView):
     """
@@ -79,17 +88,18 @@ class UserDebitCardListCreateView(generics.ListCreateAPIView):
         Petition.objects.create(
             content_object=obj,
             reason=Petition.ReasonType.CREATE_DEBIT_CARD,
-            user=self.request.user
+            user=self.request.user,
         )
+
 
 class UserDebitCardView(generics.RetrieveAPIView):
     """
     Retrieve user debit card
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserDebitCardSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return DebitCard.objects.filter(account__user=self.request.user, is_active=True)
-

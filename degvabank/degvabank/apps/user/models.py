@@ -6,10 +6,10 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class User(AbstractUser):
     email = models.EmailField(
-        _('email address'),
+        _("email address"),
         unique=True,
         error_messages={
-            'unique': _("A user with that username already exists."),
+            "unique": _("A user with that username already exists."),
         },
     )
 
@@ -24,19 +24,19 @@ class User(AbstractUser):
     )
 
     document_id = models.CharField(
-            _("document id (cedula/rif)"),
-            max_length=15,
-            validators=[
-                validators.RegexValidator(
-                    regex=r"^[eEvVjJ]\d+$",
-                    message=_("your document id is not well formatted"),
-                ),
-            ]
+        _("document id (cedula/rif)"),
+        max_length=15,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^[eEvVjJ]\d+$",
+                message=_("your document id is not well formatted"),
+            ),
+        ],
     )
 
     def get_full_name(self):
         # Returns the first_name and the last_name
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.first_name} {self.last_name}"
 
     def get_short_name(self):
         # Returns the short name for the user.
@@ -48,5 +48,3 @@ class User(AbstractUser):
         letter = document_id[0].upper()
         number = document_id[1:]
         return f"{letter}-{number}"
-
-

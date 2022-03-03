@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import PayWayKeys, PayWayMetaData
 
+
 @admin.register(PayWayKeys)
 class PayWayKeysListAdmin(admin.ModelAdmin):
     list_display = ("owner", "public")

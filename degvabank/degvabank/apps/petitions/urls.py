@@ -5,20 +5,15 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(
-    r"transactions",
-    views.TransactionViewSet,
+    r"petitions",
+    views.PetitionViewSet,
 )
 
 user_transaction_urls = [
     path(
-        "transactions/",
-        views.UserTransactionListCreateView.as_view(),
-        name="user-transactions",
-    ),
-    path(
-        "transactions/<int:id>/",
-        views.UserTransactionView.as_view(),
-        name="user-transactions-detail",
+        "petitions/",
+        views.UserPetitionListView.as_view(),
+        name="user-petitions",
     ),
 ]
 

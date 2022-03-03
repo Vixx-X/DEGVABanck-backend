@@ -23,6 +23,7 @@ class UserAccountListCreateView(generics.ListCreateAPIView):
     """
     List and create user accounts
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserAccountSerializer
     permission_classes = (IsAuthenticated,)
@@ -35,6 +36,7 @@ class UserAccountView(generics.RetrieveAPIView):
     """
     Retrieve user account
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserAccountSerializer
     permission_classes = (IsAuthenticated,)
