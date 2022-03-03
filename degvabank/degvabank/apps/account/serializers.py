@@ -35,6 +35,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
                 _("you cannot have 2 pending accounts"),
                 code="petition already exist",
             )
+        return attrs
 
     def create(self, validated_data):
         if validated_data["user"].is_staff:
