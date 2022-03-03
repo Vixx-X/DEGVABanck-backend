@@ -59,7 +59,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* --primary: #264b5d;
+    --primary: #264b5d;
     --primary-fg: #eee;
 
     --body-fg: #eeeeee;
@@ -87,7 +87,7 @@
     --selected-row: #00363a;
 
     --close-button-bg: #333333;
-    --close-button-hover-bg: #666666; */
+    --close-button-hover-bg: #666666;
   }
 }
 
