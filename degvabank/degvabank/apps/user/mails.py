@@ -54,6 +54,11 @@ class TransactionReceiveMail(BaseSimpleMail):
         ctx={ "user":user, "transaction":transaction }
         return super().set_context(ctx)
 
+    def set_test_context(self):
+        user = User.objects.first()
+        transaction = Transaction.get_dommy()
+        self.set_context(user, transaction)
+
 class TransactionSentMail(BaseSimpleMail):
     email_key = EMAIL_TYPES.TRANS_SENT
     context = {
@@ -65,16 +70,26 @@ class TransactionSentMail(BaseSimpleMail):
         ctx={ "user":user, "transaction":transaction }
         return super().set_context(ctx)
 
+    def set_test_context(self):
+        user = User.objects.first()
+        transaction = Transaction.get_dommy()
+        self.set_context(user, transaction)
+
 class ResetPasswordMail(BaseSimpleMail):
     email_key = EMAIL_TYPES.RESET_PASS
     context = {
         "user": "admin",
-        "url": "http://localhost:8000/admin"
+        "url": "https://bank.vittorioadesso.com/"
     }
 
     def set_context(self, user, url):
         ctx={ "user":user, "url":url }
         return super().set_context(ctx)
+
+    def set_test_context(self):
+        user = User.objects.first()
+        url = "https://bank.vittorioadesso.com/"
+        self.set_context(user, url)
 
 class ResetUserMail(BaseSimpleMail):
     email_key = EMAIL_TYPES.CHANGE_USER
@@ -85,6 +100,10 @@ class ResetUserMail(BaseSimpleMail):
     def set_context(self, user):
         ctx={ "user":user }
         return super().set_context(ctx)
+
+    def set_test_context(self):
+        user = User.objects.first()
+        self.set_context(user)
 
 simple_mailer.register(WelcomeMail)
 simple_mailer.register(SendOTPMail)
