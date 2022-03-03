@@ -19,7 +19,7 @@ user_transaction_urls = [
         "transactions/<int:id>/",
         views.UserTransactionView.as_view(),
         name="user-transactions-detail",
-    )
+    ),
 ]
 
 urlpatterns = [

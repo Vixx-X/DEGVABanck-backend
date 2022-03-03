@@ -10,14 +10,19 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('card', '0001_initial'),
+        ("card", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='creditcard',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='credit_cards', to=settings.AUTH_USER_MODEL, verbose_name='card owner'),
+            model_name="creditcard",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.RESTRICT,
+                related_name="credit_cards",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="card owner",
+            ),
         ),
     ]

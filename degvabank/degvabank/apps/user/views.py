@@ -30,6 +30,7 @@ from .serializers import (
 
 from .models import User
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for users
@@ -38,7 +39,6 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
 
 
 class ProfileView(generics.RetrieveAPIView):
@@ -111,13 +111,12 @@ class PasswordResetConfirmView(generics.GenericAPIView):
             }
         )
 
-
     @extend_schema(
         responses=inline_serializer(
             "invalid_link",
             {
                 "invalid_link": serializers.BooleanField(),
-            }
+            },
         ),
     )
     def get(self, request, *args, **kwargs):
@@ -142,7 +141,10 @@ class SendOTPView(generics.GenericAPIView):
         data = serializer.data
         devices = devices_for_user(user=user, confirmed=True, for_verify=True)
         if not devices:
-            return Response({"message":_("Please contact customer service")}, status=status.HTTP_501_NOT_IMPLEMENTED)
+            return Response(
+                {"message": _("Please contact customer service")},
+                status=status.HTTP_501_NOT_IMPLEMENTED,
+            )
 
         device = next(devices)
 
@@ -152,7 +154,7 @@ class SendOTPView(generics.GenericAPIView):
         else:
             data["email"] = user.email
 
-        extra_context = {} # this is de ctx of the OTP mail
+        extra_context = {}  # this is de ctx of the OTP mail
 
         data["device"] = device.persistent_id
 
@@ -160,7 +162,6 @@ class SendOTPView(generics.GenericAPIView):
         data["expire"] = (now() + timedelta(seconds=seconds)).isoformat()
 
         data["message"] = device.generate_challenge(extra_context)
-
 
         return Response(data, status=status.HTTP_201_CREATED)
 
@@ -182,13 +183,7 @@ class ChangePasswordView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(
-            {
-                "message": _(
-                    "Your password have been successfully changed."
-                )
-            }
-        )
+        return Response({"message": _("Your password have been successfully changed.")})
 
 
 class ChangeEmailView(generics.GenericAPIView):
@@ -208,13 +203,7 @@ class ChangeEmailView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(
-            {
-                "message": _(
-                    "Your email have been successfully changed."
-                )
-            }
-        )
+        return Response({"message": _("Your email have been successfully changed.")})
 
 
 class RegistrationView(APIView):
@@ -232,7 +221,6 @@ class RegistrationView(APIView):
     def send_registration_email(self, user):
         pass
 
-
     def post(self, request, *args, **kwargs):
         ser = self.serializer_class(data=request.data)
 
@@ -241,12 +229,8 @@ class RegistrationView(APIView):
             user = ser.save()
             self.send_registration_email(user)
             return Response(
-                {
-                    "message": _(
-                        "You have successfully registered."
-                    )
-                },
-                status=status.HTTP_201_CREATED
+                {"message": _("You have successfully registered.")},
+                status=status.HTTP_201_CREATED,
             )
 
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)

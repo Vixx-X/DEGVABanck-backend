@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-class Petition(models.Model):
 
+class Petition(models.Model):
     class ReasonType(models.TextChoices):
         OPEN_ACCOUNT = "+ACCOUNT", _("open a new account")
         CREATE_CREDIT_CARD = "+CC", _("create a credit card")
@@ -42,14 +42,12 @@ class Petition(models.Model):
     )
 
     user = models.ForeignKey(
-        "user.User",
-        on_delete=models.RESTRICT,
-        related_name="petitions"
+        "user.User", on_delete=models.RESTRICT, related_name="petitions"
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.CharField(max_length=20)
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")
 
     class Meta:
         app_label = "petitions"

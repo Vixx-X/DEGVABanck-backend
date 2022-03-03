@@ -5,6 +5,7 @@ from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from .models import Petition
 from .serializers import PetitionSerializer, UserPetitionSerializer
 
+
 class PetitionViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for petitions
@@ -14,10 +15,12 @@ class PetitionViewSet(viewsets.ModelViewSet):
     queryset = Petition.objects.all()
     serializer_class = PetitionSerializer
 
+
 class UserPetitionListView(generics.ListAPIView):
     """
     List user petitions
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserPetitionSerializer
     permission_classes = (IsAuthenticated,)

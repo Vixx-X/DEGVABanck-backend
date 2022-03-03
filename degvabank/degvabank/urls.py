@@ -22,12 +22,14 @@ from django.contrib.auth.decorators import user_passes_test
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
-    SpectacularSwaggerView
+    SpectacularSwaggerView,
 )
+
 
 def apidocs_view_permission(user):
     "User can read or se the api documentation if it is staff"
     return user.is_staff
+
 
 docs_urls = [
     # documentation
@@ -57,33 +59,64 @@ docs_urls = [
 ]
 
 
-urlpatterns = [
-    # admin
-    path('admin/', admin.site.urls),
-    path('admin_tools/', include('admin_tools.urls')),
-    path('admin_tools_stats/', include('admin_tools_stats.urls')),
-
-    # user
-    path('', include(('degvabank.apps.user.urls', "degvabank.apps.user"), namespace="user")),
-
-    # account
-    path('', include(('degvabank.apps.account.urls', "degvabank.apps.account"), namespace="account")),
-
-    # card
-    path('', include(('degvabank.apps.card.urls', "degvabank.apps.card"), namespace="card")),
-
-    # transaction
-    path('', include(('degvabank.apps.transaction.urls', "degvabank.apps.transaction"), namespace="transaction")),
-
-    # transaction
-    path('', include(('degvabank.apps.petitions.urls', "degvabank.apps.petitions"), namespace="petition")),
-
-    # payway
-    path('', include(('degvabank.apps.payway.urls', "degvabank.apps.payway"), namespace="payway")),
-
-    # docs
-    path('docs/', include(docs_urls)),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns = (
+    [
+        # admin
+        path("admin/", admin.site.urls),
+        path("admin_tools/", include("admin_tools.urls")),
+        path("admin_tools_stats/", include("admin_tools_stats.urls")),
+        # user
+        path(
+            "",
+            include(
+                ("degvabank.apps.user.urls", "degvabank.apps.user"), namespace="user"
+            ),
+        ),
+        # account
+        path(
+            "",
+            include(
+                ("degvabank.apps.account.urls", "degvabank.apps.account"),
+                namespace="account",
+            ),
+        ),
+        # card
+        path(
+            "",
+            include(
+                ("degvabank.apps.card.urls", "degvabank.apps.card"), namespace="card"
+            ),
+        ),
+        # transaction
+        path(
+            "",
+            include(
+                ("degvabank.apps.transaction.urls", "degvabank.apps.transaction"),
+                namespace="transaction",
+            ),
+        ),
+        # transaction
+        path(
+            "",
+            include(
+                ("degvabank.apps.petitions.urls", "degvabank.apps.petitions"),
+                namespace="petition",
+            ),
+        ),
+        # payway
+        path(
+            "",
+            include(
+                ("degvabank.apps.payway.urls", "degvabank.apps.payway"),
+                namespace="payway",
+            ),
+        ),
+        # docs
+        path("docs/", include(docs_urls)),
+    ]
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
 
 # handler400 = 'degvabank.core.exception_handler.bad_request'
 # handler403 = 'degvabank.core.exception_handler.default_handler'

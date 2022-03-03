@@ -13,6 +13,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     """
     Entrypoint for transactions
     """
+
     permission_classes = (IsAdminUser,)
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -22,6 +23,7 @@ class UserTransactionListCreateView(generics.ListCreateAPIView):
     """
     List user transactions
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserTransactionSerializer
     permission_classes = (IsAuthenticated,)
@@ -31,10 +33,12 @@ class UserTransactionListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Transaction.objects.get_queryset_by_user(self.request.user)
 
+
 class UserTransactionView(generics.RetrieveAPIView):
     """
     Retrieve user transaction
     """
+
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     serializer_class = UserTransactionSerializer
     permission_classes = (IsAuthenticated,)

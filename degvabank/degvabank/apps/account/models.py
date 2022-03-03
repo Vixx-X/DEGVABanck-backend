@@ -11,8 +11,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.fields import AutoFieldMixin, CharField
 
+
 class AutoAccountIDField(AutoFieldMixin, CharField):
     pass
+
 
 class Account(models.Model):
 
@@ -25,7 +27,7 @@ class Account(models.Model):
                 regex=r"00691337\d{11}[0|1]$",
                 message=_("not a valid account"),
             ),
-        ]
+        ],
     )
 
     class AccountType(models.TextChoices):
@@ -42,7 +44,7 @@ class Account(models.Model):
         _("account is active"),
         default=False,
         db_index=True,
-        help_text=_("account should be used by owner?")
+        help_text=_("account should be used by owner?"),
     )
 
     balance = models.DecimalField(
@@ -59,9 +61,7 @@ class Account(models.Model):
     )
 
     user = models.ForeignKey(
-        "user.User",
-        on_delete=models.RESTRICT,
-        related_name="accounts"
+        "user.User", on_delete=models.RESTRICT, related_name="accounts"
     )
 
     @property
@@ -75,12 +75,10 @@ class Account(models.Model):
     def account_number(self):
         return self.id
 
-
     def generate_account_number(self):
         rnum = randint(1, 99_999_999_999)
         acc_type = 1 if self.type == __class__.AccountType.CHECKING else 0
         return f"00691337{rnum:011}{acc_type}"
-
 
     def save(self, *args, **kwargs):
         self.id = self.id or self.generate_account_number()

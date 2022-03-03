@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('transaction', '0001_initial'),
-        ('payway', '0003_alter_paywaykeys_owner'),
+        ("transaction", "0001_initial"),
+        ("payway", "0003_alter_paywaykeys_owner"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='paywaymetadata',
-            name='transactions',
-            field=models.ManyToManyField(to='transaction.Transaction'),
+            model_name="paywaymetadata",
+            name="transactions",
+            field=models.ManyToManyField(to="transaction.Transaction"),
         ),
     ]

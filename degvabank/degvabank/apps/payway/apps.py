@@ -1,7 +1,8 @@
 from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
+
 class PaywayConfig(AppConfig):
-    name = 'degvabank.apps.payway'
+    name = "degvabank.apps.payway"
     label = "payway"
     verbose_name = _("pay way")

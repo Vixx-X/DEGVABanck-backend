@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import CreditCard, DebitCard
 
+
 class CreditCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditCard
@@ -10,9 +11,8 @@ class CreditCardSerializer(serializers.ModelSerializer):
 
 
 class UserCreditCardSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = CreditCard
         fields = [
@@ -22,7 +22,7 @@ class UserCreditCardSerializer(serializers.ModelSerializer):
             "credit",
             "user",
         ]
-        read_only_fields = ('security_code', "expiration_date", "number")
+        read_only_fields = ("security_code", "expiration_date", "number")
 
 
 class DebitCardSerializer(serializers.ModelSerializer):
@@ -35,4 +35,3 @@ class UserDebitCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = DebitCard
         fields = "__all__"
-

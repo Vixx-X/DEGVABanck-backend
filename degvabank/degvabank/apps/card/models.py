@@ -3,14 +3,14 @@ from django.db import models
 from datetime import datetime
 
 # Create your models here.
-from creditcards.models import (
-    CardNumberField, CardExpiryField, SecurityCodeField )
+from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
 from creditcards.utils import luhn
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 CREDIT_CARD = "CC"
 DEBIT_CARD = "DC"
+
 
 def gen_card_number(card_type):
     card_t = 1 if card_type == CREDIT_CARD else 0
@@ -22,17 +22,13 @@ def gen_card_number(card_type):
 
 
 class Card(models.Model):
-    number = CardNumberField(
-        _("card number"),
-        primary_key=True,
-        editable=False
-    )
+    number = CardNumberField(_("card number"), primary_key=True, editable=False)
 
     is_active = models.BooleanField(
         _("card is active"),
         default=True,
         db_index=True,
-        help_text=_("card should be used by owner?")
+        help_text=_("card should be used by owner?"),
     )
 
     security_code = SecurityCodeField(_("security code"))
@@ -60,7 +56,9 @@ class Card(models.Model):
 
     def generate_card_number(self):
         if not self.type:
-            raise NotImplementedError("Children class need to implement self.type, in order to use this gen")
+            raise NotImplementedError(
+                "Children class need to implement self.type, in order to use this gen"
+            )
         return gen_card_number(self.type)
 
     def save(self, *args, **kwargs):
@@ -127,4 +125,3 @@ class DebitCard(Card):
 
     def __str__(self):
         return "DebitCard - " + super().__str__()
-

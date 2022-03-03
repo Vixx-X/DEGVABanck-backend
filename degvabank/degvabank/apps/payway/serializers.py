@@ -11,6 +11,7 @@ from degvabank.apps.account.models import Account
 
 from .models import PayWayKeys, PayWayMetaData
 
+
 class PayWayKeysSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayWayKeys
@@ -44,8 +45,9 @@ class PayWayMetaSerializer(serializers.ModelSerializer):
 
 
 class ApiKey(TypedDict):
-    public : str
-    private : str
+    public: str
+    private: str
+
 
 class UserPayWayMetaSerializer(serializers.ModelSerializer):
 
@@ -54,11 +56,8 @@ class UserPayWayMetaSerializer(serializers.ModelSerializer):
     def get_api_keys(self, obj) -> ApiKey:
         keys = obj.keys.first()
         if not keys:
-            return {"public":"", "private":""}
-        return {
-            "public":censor_key(keys.public),
-            "private":censor_key(keys.private)
-        }
+            return {"public": "", "private": ""}
+        return {"public": censor_key(keys.public), "private": censor_key(keys.private)}
 
     transactions = serializers.SerializerMethodField()
 
@@ -68,12 +67,12 @@ class UserPayWayMetaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayWayMetaData
         exclude = ["id"]
-        lookup_field="app_id"
-
+        lookup_field = "app_id"
 
 
 class PayWayTransaction(serializers.ModelSerializer):
     key = serializers.CharField()
+
     def validate_key(self, value):
         self.key_obj = PayWayKeys.objects.filter(public=value).first()
         if not self.key_obj:
@@ -102,12 +101,15 @@ class PayWayTransaction(serializers.ModelSerializer):
 
 class PayWayTransactionFromAccount(serializers.ModelSerializer):
     number = serializers.CharField(source="id")
+
     class Meta:
         model = Account
         fields = ["number"]
 
+
 class PayWayTransactionAccount(PayWayTransaction):
     account = PayWayTransactionFromAccount()
+
     class Meta(PayWayTransaction.Meta):
         fields = PayWayTransaction.Meta.fields + ["account"]
 
@@ -125,12 +127,15 @@ class PayWayTransactionAccount(PayWayTransaction):
 
 class PayWayTransactionFromCreditCard(serializers.ModelSerializer):
     number = serializers.CharField()
+
     class Meta:
         model = CreditCard
         fields = ["number", "security_code", "expiration_date"]
 
+
 class PayWayTransactionCreditCard(PayWayTransaction):
     card = PayWayTransactionFromCreditCard()
+
     class Meta(PayWayTransaction.Meta):
         fields = PayWayTransaction.Meta.fields + ["card"]
 
@@ -144,4 +149,3 @@ class PayWayTransactionCreditCard(PayWayTransaction):
         tran = Transaction.objects.create(**self.get_transaction_kwargs())
         self.key_obj.meta_data.transactions.add(tran)
         return tran
-

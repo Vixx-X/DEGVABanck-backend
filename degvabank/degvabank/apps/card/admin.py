@@ -4,4 +4,3 @@ from .models import CreditCard, DebitCard
 # Register your models here.
 admin.site.register(CreditCard)
 admin.site.register(DebitCard)
-

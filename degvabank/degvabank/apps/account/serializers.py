@@ -7,6 +7,7 @@ from degvabank.apps.petitions.models import Petition
 
 from .models import Account
 
+
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
@@ -15,24 +16,28 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class UserAccountSerializer(serializers.ModelSerializer):
 
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
-    cards = UserDebitCardSerializer(source="get_active_cards", many=True, read_only=True)
+    cards = UserDebitCardSerializer(
+        source="get_active_cards", many=True, read_only=True
+    )
 
     def get_id(self, obj):
         return obj.pretty_account_number
 
     def validate(self, attrs):
-        if Petition.objects.filter(user=attrs['user'], reason=Petition.ReasonType.OPEN_ACCOUNT, status=Petition.PetitionStatus.PENDING).exists():
+        if Petition.objects.filter(
+            user=attrs["user"],
+            reason=Petition.ReasonType.OPEN_ACCOUNT,
+            status=Petition.PetitionStatus.PENDING,
+        ).exists():
             raise ValidationError(
                 _("you cannot have 2 pending accounts"),
                 code="petition already exist",
             )
 
     def create(self, validated_data):
-        if validated_data['user'].is_staff:
+        if validated_data["user"].is_staff:
             return self.Meta.model.objects.create(**validated_data)
         return self.Meta.model.objects.request_account(**validated_data)
 
@@ -46,4 +51,3 @@ class UserAccountSerializer(serializers.ModelSerializer):
             "cards",
             "user",
         ]
-

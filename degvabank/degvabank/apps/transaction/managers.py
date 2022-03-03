@@ -4,6 +4,7 @@ from django.db.models.query_utils import Q
 from degvabank.apps.account.models import Account
 from degvabank.apps.card.models import CreditCard
 
+
 class TransactionMixin:
     def charge_acc_or_card(self, obj, ammount):
         if isinstance(obj, Account):
@@ -12,7 +13,10 @@ class TransactionMixin:
             obj.credit += ammount
 
     def get_account_or_creditcard(self, code):
-        return Account.objects.filter(id=code, is_active=True).first() or CreditCard.objects.filter(number=code, is_active=True).first()
+        return (
+            Account.objects.filter(id=code, is_active=True).first()
+            or CreditCard.objects.filter(number=code, is_active=True).first()
+        )
 
     def process_in_house_transaction(self, transaction):
         source = self.get_account_or_creditcard(transaction.source)
@@ -23,7 +27,7 @@ class TransactionMixin:
         if not target:
             raise ValidationError("This target account or credit card is not valid")
 
-        self.charge_acc_or_card(target,  transaction.amount)
+        self.charge_acc_or_card(target, transaction.amount)
         self.charge_acc_or_card(source, -transaction.amount)
 
         source.save()

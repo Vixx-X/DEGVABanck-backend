@@ -19,7 +19,7 @@ user_account_urls = [
         "accounts/<int:id>/",
         views.UserAccountView.as_view(),
         name="user-account-detail",
-    )
+    ),
 ]
 
 urlpatterns = [
