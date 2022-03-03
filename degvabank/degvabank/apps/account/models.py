@@ -54,7 +54,7 @@ class Account(models.Model):
         decimal_places=2,
     )
 
-    date_created = models.DateField(
+    date_created = models.DateTimeField(
         _("date created"),
         auto_now_add=True,
         db_index=True,

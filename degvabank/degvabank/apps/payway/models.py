@@ -35,7 +35,7 @@ class PayWayMetaData(models.Model):
         _("fail url"),
     )
 
-    date_created = models.DateField(
+    date_created = models.DateTimeField(
         _("date created"),
         auto_now_add=True,
         db_index=True,

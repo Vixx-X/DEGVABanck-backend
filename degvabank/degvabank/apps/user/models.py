@@ -1,9 +1,16 @@
 from django.core import validators
 from django.db import models
+from django.conf import settings
+from django.template import Context, Template
+from django.template.loader import get_template
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
+from django_otp.plugins.otp_email.models import EmailDevice as BaseEmailDevice
+
+from degvabank.apps.user.mails import SendOTPMail
+
+
 class User(AbstractUser):
     email = models.EmailField(
         _("email address"),
@@ -48,3 +55,42 @@ class User(AbstractUser):
         letter = document_id[0].upper()
         number = document_id[1:]
         return f"{letter}-{number}"
+
+
+class EmailDevice(BaseEmailDevice):
+    """
+    A :class:`~django_otp.models.SideChannelDevice` that delivers a token to
+    the email address saved in this object or alternatively to the user's
+    registered email address (``user.email``).
+    The tokens are valid for :setting:`OTP_EMAIL_TOKEN_VALIDITY` seconds. Once
+    a token has been accepted, it is no longer valid.
+    Note that if you allow users to reset their passwords by email, this may
+    provide little additional account security. It may still be useful for,
+    e.g., requiring the user to re-verify their email address on new devices.
+    .. attribute:: email
+        *EmailField*: An alternative email address to send the tokens to.
+    """
+
+    class Meta:
+        proxy = True
+
+    def generate_challenge(self, extra_context=None):
+        """
+        Generates a random token and emails it to the user.
+
+        :param extra_context: Additional context variables for rendering the
+            email template.
+        :type extra_context: dict
+
+        """
+        self.generate_token(valid_secs=settings.OTP_EMAIL_TOKEN_VALIDITY)
+
+        context = {'token': self.token, **(extra_context or {})}
+
+        mail = SendOTPMail()
+        mail.set_context(**context)
+        mail.send([self.user or self.user.email])
+
+        message = _("sent by email")
+
+        return message
