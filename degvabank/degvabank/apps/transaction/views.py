@@ -29,6 +29,7 @@ class UserTransactionListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     ordering_fields = "__all__"
     filterset_class = TransaccionFilter
+    search_fields = ['reason', 'target', 'source', 'amount']
 
     def get_queryset(self):
         return Transaction.objects.get_queryset_by_user(self.request.user)
