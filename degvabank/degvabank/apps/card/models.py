@@ -15,7 +15,7 @@ DEBIT_CARD = "DC"
 def gen_card_number(card_type):
     card_t = 1 if card_type == CREDIT_CARD else 0
     while True:
-        rnum = randint(1, 999_999_999)
+        rnum = randint(1, 99_999_999_999)
         snum = f"1337{card_t}{rnum:11}"
         if luhn(snum):
             return snum

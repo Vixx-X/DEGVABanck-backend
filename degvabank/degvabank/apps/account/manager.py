@@ -15,6 +15,6 @@ class AccountManager(models.Manager):
         Petition.objects.create(
             content_object=obj,
             reason=Petition.ReasonType.OPEN_ACCOUNT,
-            user=self.request.user,
+            user=kwargs['user'],
         )
         return obj
