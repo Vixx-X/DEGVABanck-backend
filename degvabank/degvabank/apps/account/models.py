@@ -11,6 +11,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.fields import AutoFieldMixin, CharField
 
+from degvabank.apps.account.manager import AccountManager
+
 
 class AutoAccountIDField(AutoFieldMixin, CharField):
     pass
@@ -63,6 +65,8 @@ class Account(models.Model):
     user = models.ForeignKey(
         "user.User", on_delete=models.RESTRICT, related_name="accounts"
     )
+
+    objects = AccountManager()
 
     @property
     def pretty_account_number(self):
