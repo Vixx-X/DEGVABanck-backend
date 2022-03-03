@@ -180,7 +180,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Caracas"
 
 USE_I18N = True
 
@@ -233,6 +233,7 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "DEFAULT_FILTER_BACKENDS": [
+        "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
         "django_filters.rest_framework.DjangoFilterBackend",
     ],

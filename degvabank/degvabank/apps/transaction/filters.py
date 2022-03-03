@@ -18,7 +18,7 @@ class TransaccionFilter(filters.FilterSet):
 
     reason = filters.CharFilter(field_name="reason", lookup_expr="icontains")
 
-    id = filters.CharFilter(field_name="id", lookup_expr="iconstains")
+    id = filters.NumberFilter(field_name="id", lookup_expr="exact")
 
     class Meta:
         model = Transaction
