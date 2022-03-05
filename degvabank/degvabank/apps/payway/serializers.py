@@ -2,6 +2,8 @@ from typing import TypedDict
 from django.db.utils import ProgrammingError
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+import json
+import requests
 
 from degvabank.apps.payway.utils import censor_key
 
@@ -72,6 +74,8 @@ class UserPayWayMetaSerializer(serializers.ModelSerializer):
 
 class PayWayTransaction(serializers.ModelSerializer):
     key = serializers.CharField()
+    order = serializers.CharField()
+    next = serializers.URLField(read_only=True)
 
     def validate_key(self, value):
         self.key_obj = PayWayKeys.objects.filter(public=value).first()
@@ -94,9 +98,36 @@ class PayWayTransaction(serializers.ModelSerializer):
             "source": self.get_transaction_source(),
         }
 
+    def get_payload(self, tran):
+        data = self.validated_data
+        if not data:
+            raise ProgrammingError(_("make sure to use get_payload once the transaction happens"))
+        return {
+            "order": data["order"],
+            "transaction_number": tran.id,
+            "reason": tran.reason,
+            "amount": tran.amount,
+            "status": "APPROVED",
+        }
+
+
+    def save(self):
+        tran = Transaction.objects.create(**self.get_transaction_kwargs())
+        self.key_obj.meta_data.transactions.add(tran)
+
+        url = self.key_obj.meta_data.backend
+        data = json.dumps(self.get_payload(tran))
+        requests.post(url, data=self.key_obj.encrypt(data))
+        return tran
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret["next"] = self.key_obj.meta_data.success
+        return ret
+
     class Meta:
         model = Transaction
-        fields = ["key", "amount", "reason"]
+        fields = ["key", "order", "next", "amount", "reason"]
 
 
 class PayWayTransactionFromAccount(serializers.ModelSerializer):
@@ -109,6 +140,7 @@ class PayWayTransactionFromAccount(serializers.ModelSerializer):
 
 class PayWayTransactionAccount(PayWayTransaction):
     account = PayWayTransactionFromAccount()
+    order = serializers.CharField()
 
     class Meta(PayWayTransaction.Meta):
         fields = PayWayTransaction.Meta.fields + ["account"]
@@ -118,11 +150,6 @@ class PayWayTransactionAccount(PayWayTransaction):
         if not data:
             raise ProgrammingError(_("make sure to use get_transaction_kwargs on save"))
         return data["account"]["id"]
-
-    def save(self):
-        tran = Transaction.objects.create(**self.get_transaction_kwargs())
-        self.key_obj.meta_data.transactions.add(tran)
-        return tran
 
 
 class PayWayTransactionFromCreditCard(serializers.ModelSerializer):
@@ -145,7 +172,3 @@ class PayWayTransactionCreditCard(PayWayTransaction):
             raise ProgrammingError(_("make sure to use get_transaction_kwargs on save"))
         return data["card"]["number"]
 
-    def save(self):
-        tran = Transaction.objects.create(**self.get_transaction_kwargs())
-        self.key_obj.meta_data.transactions.add(tran)
-        return tran
