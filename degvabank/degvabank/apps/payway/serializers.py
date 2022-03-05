@@ -106,12 +106,13 @@ class PayWayTransaction(serializers.ModelSerializer):
             "order": data["order"],
             "transaction_number": tran.id,
             "reason": tran.reason,
-            "amount": tran.amount,
-            "status": "APPROVED",
+            "amount": float(tran.amount),
+            "status": "APPROVED" if tran.status == tran.TransactionStatus.ACCEPTED else "REJECTED",
         }
 
 
     def save(self):
+
         tran = Transaction.objects.create(**self.get_transaction_kwargs())
         self.key_obj.meta_data.transactions.add(tran)
 
