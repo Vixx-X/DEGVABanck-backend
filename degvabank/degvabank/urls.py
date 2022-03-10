@@ -18,7 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth.decorators import user_passes_test
-from degvabank.apps.user.generate_pdf_transaction import html_to_pdf_view
+from degvabank.apps.user.generate_pdfs import html_to_pdf_view
 
 from drf_spectacular.views import (
     SpectacularAPIView,

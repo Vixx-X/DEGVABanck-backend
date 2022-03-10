@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <title>Transactions per Client</title>
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Transactions per Client</h1>
+    <table>
+        <tr>
+            <td>Client</td>
+            <td>Number of Transactions</td>
+        </tr>
+        {% for client_transactions in clients_transactions %}
+        <tr>
+            <td>{{client_transactions.user}}</td>
+            <td>{{client_transactions.num_transactions}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+</body>
+
+</html>

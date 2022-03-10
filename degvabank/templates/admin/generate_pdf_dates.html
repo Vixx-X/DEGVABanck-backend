@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Transactions</title>
+    <title>Number of Transactions per Date</title>
     <style>
         body {
             background-color: #f7f7f7;
@@ -10,22 +10,16 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">Transactions</h1>
+    <h1 style="text-align: center;">Number of Transactions per Date</h1>
     <table>
         <tr>
-            <td>ID</td>
-            <td>Source</td>
-            <td>Target</td>
-            <td>Amount</td>
             <td>Date</td>
+            <td>Number of Transactions</td>
         </tr>
         {% for transaction in transactions %}
         <tr>
-            <td>{{transaction.id}}</td>
-            <td>********{{transaction.source|slice:"-5:"}}</td>
-            <td>********{{transaction.target|slice:"-5:"}}</td>
-            <td>{{transaction.amount}}</td>
             <td>{{transaction.date}}</td>
+            <td>{{transaction.count}}</td>
         </tr>
         {% endfor %}
     </table>
