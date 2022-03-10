@@ -13,23 +13,24 @@
     <h1 style="text-align: center;">Transactions</h1>
     <table>
         <tr>
-            <td>ID</td>
-            <td>Source</td>
-            <td>Target</td>
-            <td>Amount</td>
-            <td>Date</td>
+            <td>User</td>
+            <td>Total</td>
+            <td>Succeeded</td>
+            <td>Failture</td>
+            <td>Others</td>
         </tr>
-        {% for transaction in transactions %}
         <tr>
-            <td>{{transaction.id}}</td>
-            <td>********{{transaction.source|slice:"-5:"}}</td>
-            <td>********{{transaction.target|slice:"-5:"}}</td>
-            <td>{{transaction.amount}}</td>
-            <td>{{transaction.date}}</td>
+            <td>{{transactions.user}}</td>
+            <td>{{transactions.transactions.total}}</td>
+            <td>{{transactions.transactions.succeed}}</td>
+            <td>{{transactions.transactions.fail}}</td>
+            <td>{{transactions.transactions.other}}</td>
         </tr>
-        {% endfor %}
     </table>
-    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+
+    <br/>
+    <br/>
+    {{ svg | safe }}
 </body>
 
 </html>
