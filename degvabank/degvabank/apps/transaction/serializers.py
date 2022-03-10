@@ -80,3 +80,62 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         field_names = [field.name for field in self.Meta.model._meta.get_fields()]
         data = {a: b for a, b in validated_data.items() if a in field_names}
         return self.Meta.model.objects.create(**data)
+
+
+class CardSerializer(serializers.Serializer):
+    number = serializers.CharField()
+    security_code = serializers.CharField()
+    expiration_date = serializers.DateTimeField()
+    document_id = serializers.CharField(
+        write_only=True,
+        max_length=15,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^[eEvVjJ]\d+$",
+                message=_("your document id is not well formatted"),
+            ),
+        ],
+    )
+
+class AccountSerializer(serializers.Serializer):
+    number = serializers.CharField()
+    document_id = serializers.CharField(
+        write_only=True,
+        max_length=15,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^[eEvVjJ]\d+$",
+                message=_("your document id is not well formatted"),
+            ),
+        ],
+    )
+
+class ForeignTransactionSerializer(serializers.ModelSerializer):
+
+    acc = card = dst = None
+    acc_src = AccountSerializer(required=False)
+    acc_dst = AccountSerializer(required=False)
+    card_src = CardSerializer(required=False)
+    card_dst = CardSerializer(required=False)
+
+    class Meta:
+        model = Transaction
+        fields = [
+            "id",
+            "source",
+            "target",
+            "document_id",
+            "amount",
+            "type",
+            "status",
+            "reason",
+            "date",
+        ]
+        read_only_fields = ("type", "status", "date", "id")
+
+    def create(self, validated_data):
+        field_names = [field.name for field in self.Meta.model._meta.get_fields()]
+        data = {a: b for a, b in validated_data.items() if a in field_names}
+        data["source"] = validated_data["acc_src"] or validated_data["card_src"]
+        data["target"] = validated_data["acc_dst"] or validated_data["card_dst"]
+        return self.Meta.model.objects.create1(data)

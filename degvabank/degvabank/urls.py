@@ -29,7 +29,7 @@ from drf_spectacular.views import (
 
 def apidocs_view_permission(user):
     "User can read or se the api documentation if it is staff"
-    return user.is_staff
+    return user.is_staff or True
 
 
 docs_urls = [

@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.query_utils import Q
+from rest_framework import serializers
 from degvabank.apps.account.models import Account
 from degvabank.apps.card.models import CreditCard
 
@@ -34,7 +35,8 @@ class TransactionMixin:
         target.save()
         return transaction
 
-    def process_outside_transaction(self, transaction):
+    def process_outside_transaction(self, data):
+        raise serializers.ValidationError({"msg": "Todo bien"})
         pass
 
     def process_transaction(self, transaction):
@@ -56,3 +58,6 @@ class TransactionManager(TransactionMixin, models.Manager):
     def create(self, **kwargs):
         transaction = self.model(**kwargs)
         return self.process_transaction(transaction)
+
+    def create1(self, data):
+        return self.process_outside_transaction(data)

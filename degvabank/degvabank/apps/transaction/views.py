@@ -5,7 +5,7 @@ from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 from degvabank.apps.transaction.filters import TransaccionFilter
 
-from .serializers import TransactionSerializer, UserTransactionSerializer
+from .serializers import TransactionSerializer, UserTransactionSerializer, ForeignTransactionSerializer
 from .models import Transaction
 
 
@@ -46,3 +46,13 @@ class UserTransactionView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return Transaction.objects.get_queryset_by_user(self.request.user)
+
+
+class ForeignTransactionView(generics.CreateAPIView):
+    """
+    Create foreign transaction
+    """
+
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    serializer_class = ForeignTransactionSerializer
+    permission_classes = []
