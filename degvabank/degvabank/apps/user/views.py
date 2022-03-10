@@ -154,7 +154,7 @@ class SendOTPView(generics.GenericAPIView):
         else:
             data["email"] = user.email
 
-        extra_context = {}  # this is de ctx of the OTP mail
+        extra_context = {"user":user}  # this is de ctx of the OTP mail
 
         data["device"] = device.persistent_id
 

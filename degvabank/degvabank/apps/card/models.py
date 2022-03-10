@@ -15,8 +15,8 @@ DEBIT_CARD = "DC"
 def gen_card_number(card_type):
     card_t = 1 if card_type == CREDIT_CARD else 0
     while True:
-        rnum = randint(1, 999_999_999)
-        snum = f"1337{card_t}{rnum:09}"
+        rnum = randint(1, 99_999_999_999)
+        snum = f"1337{card_t}{rnum:11}"
         if luhn(snum):
             return snum
 
@@ -35,7 +35,7 @@ class Card(models.Model):
 
     expiration_date = CardExpiryField(_("expiration date"))
 
-    date_created = models.DateField(
+    date_created = models.DateTimeField(
         _("date created"),
         auto_now_add=True,
         db_index=True,
@@ -92,6 +92,13 @@ class CreditCard(Card):
         verbose_name=_("credits"),
         max_digits=12,
         decimal_places=2,
+    )
+
+    credit_limit = models.DecimalField(
+        verbose_name=_("credit limit"),
+        max_digits=12,
+        decimal_places=2,
+        default=50000.
     )
 
     class Meta:

@@ -6,3 +6,7 @@ class UserConfig(AppConfig):
     name = "degvabank.apps.user"
     label = "user"
     verbose_name = _("user")
+
+    def ready(self):
+        from . import signals
+        return super().ready()

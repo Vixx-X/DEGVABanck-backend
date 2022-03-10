@@ -1,7 +1,6 @@
 from simple_mail.mailer import BaseSimpleMail, simple_mailer
 
 from degvabank.apps.transaction.models import Transaction
-from .models import User
 
 
 class EMAIL_TYPES:
@@ -50,6 +49,7 @@ class TransactionReceiveMail(BaseSimpleMail):
         return super().set_context(ctx)
 
     def set_test_context(self):
+        from .models import User
         user = User.objects.first()
         transaction = Transaction.get_dommy()
         self.set_context(user, transaction)
@@ -64,6 +64,7 @@ class TransactionSentMail(BaseSimpleMail):
         return super().set_context(ctx)
 
     def set_test_context(self):
+        from .models import User
         user = User.objects.first()
         transaction = Transaction.get_dommy()
         self.set_context(user, transaction)
@@ -78,6 +79,7 @@ class ResetPasswordMail(BaseSimpleMail):
         return super().set_context(ctx)
 
     def set_test_context(self):
+        from .models import User
         user = User.objects.first()
         url = "https://bank.vittorioadesso.com/"
         self.set_context(user, url)
@@ -92,6 +94,7 @@ class ResetUserMail(BaseSimpleMail):
         return super().set_context(ctx)
 
     def set_test_context(self):
+        from .models import User
         user = User.objects.first()
         self.set_context(user)
 

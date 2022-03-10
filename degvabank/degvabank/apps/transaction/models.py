@@ -50,7 +50,7 @@ class Transaction(models.Model):
         max_length=50,
     )
 
-    date = models.DateField(
+    date = models.DateTimeField(
         _("transaction date"),
         auto_now=True,
     )

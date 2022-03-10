@@ -82,6 +82,9 @@ class PayGateWayAccount(generics.CreateAPIView):
     serializer_class = PayWayTransactionAccount
     permission_classes = (IsAuthenticated,)
 
+    def finalize_response(self, request, response, *args, **kwargs):
+        return super().finalize_response(request, response, *args, **kwargs)
+
 
 class PayGateWayCard(generics.CreateAPIView):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]

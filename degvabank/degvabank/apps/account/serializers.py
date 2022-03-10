@@ -38,8 +38,6 @@ class UserAccountSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        if validated_data["user"].is_staff:
-            return self.Meta.model.objects.create(**validated_data)
         return self.Meta.model.objects.request_account(**validated_data)
 
     class Meta:

@@ -29,13 +29,13 @@ class Petition(models.Model):
         help_text=_("status (approved, pending, denied)"),
     )
 
-    date_processed = models.DateField(
+    date_processed = models.DateTimeField(
         _("date processed"),
         auto_now=True,
         db_index=True,
     )
 
-    date_created = models.DateField(
+    date_created = models.DateTimeField(
         _("date created"),
         auto_now_add=True,
         db_index=True,
