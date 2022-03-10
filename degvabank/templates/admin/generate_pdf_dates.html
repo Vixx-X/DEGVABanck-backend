@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <title>Number of Transactions per Date and Time</title>
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Number of Transactions per Date</h1>
+    <table>
+        <tr>
+            <td>Date</td>
+            <td>Number of Transactions</td>
+        </tr>
+        {% for transaction in transaction_dates %}
+        <tr>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+    <h1 style="text-align: center;">Number of Transactions per Time</h1>
+    <table>
+        <tr>
+            <td>Time</td>
+            <td>Number of Transactions</td>
+        </tr>
+        {% for transaction in transaction_times %}
+        <tr>
+            <td>{{ transaction.time }}</td>
+            <td>{{ transaction.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+</body>
+
+</html>
