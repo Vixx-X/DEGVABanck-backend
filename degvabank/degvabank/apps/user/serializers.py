@@ -95,7 +95,7 @@ class PasswordSerializer(serializers.Serializer):
 
     def __init__(self, instance=None, data=None, **kwargs):
         super().__init__(instance=instance, data=data, **kwargs)
-        self.user = self.context["request"].user
+        self.user = self.context["view"].object
 
     def validate(self, attrs):
         password1 = attrs["new_password1"]
