@@ -2,15 +2,15 @@ from django.contrib.admin import AdminSite
 from django.contrib.admin.apps import AdminConfig
 from django.urls import path
 
-from degvabank.core import views
 
 class CustomAdminSite(AdminSite):
     def get_urls(self):
+        from degvabank.core import views
         urls = super().get_urls()
         my_urls = [
             path(
                 'reports/client_transaction/',
-                self.admin_view(views.ReportClientList.as_view()),
+                self.admin_view(views.ReportClientTransaction.as_view()),
                 name='report-client-transaction',
             ),
             path(
