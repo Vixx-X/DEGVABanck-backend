@@ -18,6 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.base import View
 from degvabank.apps.user.generate_pdfs import generate_clients_pdf, generate_date_pdf, generate_transaction_pdf
 
 
@@ -117,8 +118,7 @@ urlpatterns = (
         path("docs/", include(docs_urls)),
         path("transactionpdf/", generate_transaction_pdf, name="pdf1"),
         path("datepdf/", generate_date_pdf, name="pdf2"),
-        path("clientpdf/", generate_clients_pdf, name="pdf3")
-        # path("pdf/", html_to_pdf_view, name="pdf")
+        path("clientpdf/", generate_clients_pdf, name="pdf3"),
         path(
             "user/password-reset/confirm/<str:uidb64>/<str:token>/",
             View.as_view(),
