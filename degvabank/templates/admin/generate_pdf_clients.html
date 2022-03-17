@@ -27,17 +27,18 @@
     <h1 style="text-align: center;">Transactions per Client</h1>
     <table>
         <tr>
-            <td >Client</td>
-            <td >Number of Transactions</td>
+            <td>Client</td>
+            <td>Number of Transactions</td>
         </tr>
         {% for client_transactions in clients_transactions %}
         <tr>
-            <td >{{client_transactions.user}}</td>
-            <td >{{client_transactions.transaction}}</td>
+            <td>{{client_transactions.user}}</td>
+            <td>{{client_transactions.transaction}}</td>
         </tr>
         {% endfor %}
     </table>
-
+    <br />
+    <br />
     {{ svg | safe }}
 </body>
 

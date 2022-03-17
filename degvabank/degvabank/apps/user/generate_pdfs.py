@@ -28,10 +28,18 @@ def generate_transaction_pdf(request=None, user=User.objects.get(username="danie
     fig = plt.figure()
     plt.rcParams['svg.fonttype'] = 'none'
     if sum(y) == 0:
-        plt.bar(x, y)
         plt.xticks(rotation='vertical')
+        plt.xlabel("Transaction Type", labelpad=20)
+        plt.ylabel("Number of Transactions", labelpad=20)
+        plt.rcParams['figure.autolayout'] = True
+        plt.tight_layout()
+        plt.bar(x, y)
     else:
+        plt.rcParams['figure.autolayout'] = True
+        plt.tight_layout()
         plt.pie(y, labels=x, autopct='%.1f%%')
+
+    plt.title('Transactions')
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg')
@@ -69,6 +77,12 @@ def generate_clients_pdf(request=None, min_date="2020-01-01", max_date="2040-01-
 
     fig = plt.figure()
     plt.rcParams['svg.fonttype'] = 'none'
+    plt.xticks(rotation='vertical')
+    plt.xlabel("Client Username", labelpad=20)
+    plt.ylabel("Number of Transactions", labelpad=20)
+    plt.rcParams['figure.autolayout'] = True
+    plt.tight_layout()
+    plt.title('Number of Transactions per Client')
     plt.bar(x, y, color=['b', 'r', 'm', 'g'])
 
     imgdata = StringIO()
@@ -108,21 +122,25 @@ def generate_date_pdf(request=None, min_date="2020-01-01", max_date="2040-01-01"
     for time in times:
         transaction_times.append({"time": time, "count": transactions_per_time.count(time)})
 
-    transaction_times.sort(key=operator.itemgetter("count"))
-    transaction_times.reverse()
-    transaction_dates.sort(key=operator.itemgetter("count"))
-    transaction_dates.reverse()
+    transaction_times.sort(key=operator.itemgetter("time"))
+    transaction_dates.sort(key=operator.itemgetter("date"))
 
-    x = [time["time"] for time in transaction_times]
+    x = [time["time"] + ":00" for time in transaction_times]
     y = [time["count"] for time in transaction_times]
 
     fig = plt.figure()
     plt.rcParams['svg.fonttype'] = 'none'
+    plt.xticks(rotation='vertical')
+    plt.xlabel("Hours", labelpad=20)
+    plt.ylabel("Number of Transactions", labelpad=20)
     plt.rcParams['figure.autolayout'] = True
+    plt.tight_layout()
+    plt.title('Number of Transactions per Time')
     plt.bar(x, y, color=['b', 'r', 'm', 'g'])
+    
 
     imgtime = StringIO()
-    fig.savefig(imgtime, format='svg')
+    fig.savefig(imgtime, format='svg', bbox_inches="tight")
     imgtime.seek(0)  # rewind the data
 
     svg_time = imgtime.getvalue()
@@ -135,11 +153,16 @@ def generate_date_pdf(request=None, min_date="2020-01-01", max_date="2040-01-01"
 
     fig = plt.figure()
     plt.rcParams['svg.fonttype'] = 'none'
+    plt.xticks(rotation='vertical')
+    plt.xlabel("Dates", labelpad=20)
+    plt.ylabel("Number of Transactions", labelpad=20)
     plt.rcParams['figure.autolayout'] = True
+    plt.tight_layout()
+    plt.title('Number of Transactions per Date')
     plt.bar(x, y, color=['b', 'r', 'm', 'g'])
-
+    
     imgdate = StringIO()
-    fig.savefig(imgdate, format='svg')
+    fig.savefig(imgdate, format='svg', bbox_inches="tight")
     imgdate.seek(0)  # rewind the data
 
     svg_date = imgdate.getvalue()
