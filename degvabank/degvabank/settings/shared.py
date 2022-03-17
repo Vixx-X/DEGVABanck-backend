@@ -35,6 +35,8 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: use only the server name, not *!
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
+# Site Config
+SITE_ID = int(env("SITE_ID", default="1"))
 
 # Email settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
