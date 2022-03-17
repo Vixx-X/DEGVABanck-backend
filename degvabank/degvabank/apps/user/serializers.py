@@ -81,10 +81,11 @@ class PasswordResetSerializer(serializers.Serializer):
     def send_password_reset_email(self, site, user):
         extra_context = {
             "user": user,
-            "site": site,
-            "reset_url": get_password_reset_url(user),
+            "url": site + get_password_reset_url(user),
         }
-        # CustomerDispatcher().send_password_reset_email_for_user(user, extra_context)
+        mail = mails.ResetPasswordMail()
+        mail.set_context(**extra_context)
+        mail.send([user.email]) 
 
 
 class PasswordSerializer(serializers.Serializer):
