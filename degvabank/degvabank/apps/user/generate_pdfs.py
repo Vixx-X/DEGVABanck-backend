@@ -1,10 +1,8 @@
-from itertools import count
 import operator
 from typing import Sequence
 from django.db.models import Count, Q
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 
@@ -14,7 +12,6 @@ from degvabank.apps.account.models import Account
 
 import matplotlib.pyplot as plt
 from io import StringIO
-from matplotlib import numpy as np
 
 # Transacciones fallidas/exitosas por Clientes
 def generate_transaction_pdf(request=None, user=User.objects.get(username="daniel")):    

@@ -80,3 +80,68 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         field_names = [field.name for field in self.Meta.model._meta.get_fields()]
         data = {a: b for a, b in validated_data.items() if a in field_names}
         return self.Meta.model.objects.create(**data)
+
+
+class TransactionCardSerializer(serializers.Serializer):
+    number = serializers.CharField()
+    security_code = serializers.CharField()
+    expiration_date = serializers.DateTimeField()
+    document_id = serializers.CharField(
+        required=True,
+        write_only=True,
+        max_length=15,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^[eEvVjJ]\d+$",
+                message=_("your document id is not well formatted"),
+            ),
+        ],
+    )
+
+class TransactionAccountSerializer(serializers.Serializer):
+    number = serializers.CharField()
+    document_id = serializers.CharField(
+        required=True,
+        write_only=True,
+        max_length=15,
+        validators=[
+            validators.RegexValidator(
+                regex=r"^[eEvVjJ]\d+$",
+                message=_("your document id is not well formatted"),
+            ),
+        ],
+    )
+
+class ForeignTransactionSerializer(serializers.ModelSerializer):
+
+    acc_src = TransactionAccountSerializer(required=False)
+    acc_dst = TransactionAccountSerializer(required=False)
+    card_src = TransactionCardSerializer(required=False)
+    card_dst = TransactionCardSerializer(required=False)
+
+    class Meta:
+        model = Transaction
+        fields = [
+            "id",
+            "acc_src",
+            "acc_dst",
+            "card_src",
+            "card_dst",
+            "amount",
+            "type",
+            "status",
+            "reason",
+            "date",
+        ]
+        read_only_fields = ("type", "status", "date", "id")
+
+    def create(self, validated_data):
+        field_names = [field.name for field in self.Meta.model._meta.get_fields()]
+        data = {a: b for a, b in validated_data.items() if a in field_names}
+        kwargs = {
+            "amount": data["amount"],
+            "reason": data["reason"],
+            "source": validated_data.get("acc_src") or validated_data.get("card_src"),
+            "target": validated_data.get("acc_dst") or validated_data.get("card_dst")
+        }
+        return self.Meta.model.objects.create_any_transaction(from_foreign=True, **kwargs)

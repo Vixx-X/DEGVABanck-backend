@@ -45,6 +45,8 @@ EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+OTP_EMAIL_SENDER = EMAIL_HOST_USER
+OTP_EMAIL_TOKEN_VALIDITY = 300
 
 # simple-mail settings
 # https://github.com/VingtCinq/django-simple-mail
@@ -235,6 +237,7 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "DEFAULT_FILTER_BACKENDS": [
@@ -311,6 +314,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-
+# Django Admin Tools
+# https://django-admin-tools.readthedocs.io/en/latest/customization.html#customizing-the-dashboards
 ADMIN_TOOLS_INDEX_DASHBOARD = "degvabank.dashboard.CustomIndexDashboard"
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = "degvabank.dashboard.CustomAppIndexDashboard"
+ADMIN_TOOLS_MENU = "degvabank.menu.CustomMenu"

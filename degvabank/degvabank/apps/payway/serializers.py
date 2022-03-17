@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 import json
 import requests
+from urllib import parse
 
 from degvabank.apps.payway.utils import censor_key
 
@@ -112,18 +113,24 @@ class PayWayTransaction(serializers.ModelSerializer):
 
 
     def save(self):
-
         tran = Transaction.objects.create(**self.get_transaction_kwargs())
         self.key_obj.meta_data.transactions.add(tran)
 
-        url = self.key_obj.meta_data.backend
         data = json.dumps(self.get_payload(tran))
-        requests.post(url, data=self.key_obj.encrypt(data))
+        headers = {'Content-type': 'text/plain'}
+        url = self.key_obj.meta_data.backend
+
+        requests.post(url, data=self.key_obj.encrypt(data), headers=headers)
         return tran
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret["next"] = self.key_obj.meta_data.success
+        data = self.validated_data
+        if not data:
+            raise ProgrammingError(_("make sure to use to_representation once the transaction happens"))
+        params = {"order": data['order']}
+        query = parse.urlencode(params)
+        ret["next"] = f"{self.key_obj.meta_data.success}?{query}"
         return ret
 
     class Meta:
