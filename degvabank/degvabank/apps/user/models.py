@@ -95,7 +95,7 @@ class EmailDevice(BaseEmailDevice):
 
         mail = SendOTPMail()
         mail.set_context(**context)
-        mail.send([self.user or self.user.email])
+        mail.send([self.user.email])
 
         message = _("sent by email")
 

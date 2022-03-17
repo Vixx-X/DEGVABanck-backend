@@ -87,7 +87,7 @@ class TransactionCardSerializer(serializers.Serializer):
     security_code = serializers.CharField()
     expiration_date = serializers.DateTimeField()
     document_id = serializers.CharField(
-        required=True,
+        required=False,
         write_only=True,
         max_length=15,
         validators=[

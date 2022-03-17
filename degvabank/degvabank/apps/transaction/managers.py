@@ -14,7 +14,7 @@ class TransactionMixin:
             if False:
                 raise serializers.ValidationError(msg)
         if isinstance(obj, CreditCard):
-            if False:
+            if False and document_id:
                 raise serializers.ValidationError(msg)
 
     def check_acc_or_card_funds(self, obj, ammount, msg):
@@ -67,7 +67,7 @@ class TransactionMixin:
                 )
             self.check_acc_or_card_document_id(
                 source_obj,
-                source["document_id"],
+                source.get("document_id"),
                 {"source": _("Document id did not match")}
             )
             self.check_acc_or_card_funds(
