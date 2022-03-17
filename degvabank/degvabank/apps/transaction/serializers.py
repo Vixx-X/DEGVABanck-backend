@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from degvabank.apps.account.models import Account
 from degvabank.apps.card.models import CreditCard
+from degvabank.apps.transaction.utils import is_our_number
 
 from .models import Transaction
 
@@ -15,7 +16,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class UserTransactionSerializer(serializers.ModelSerializer):
-    acc = card = dst = None
+    acc = card = dst = dst_not_our = None
     document_id = serializers.CharField(
         write_only=True,
         max_length=15,
@@ -37,6 +38,9 @@ class UserTransactionSerializer(serializers.ModelSerializer):
 
     def validate_target(self, value):
         # TODO: if value not ours: return value
+        if not is_our_number(value):
+            self.dst = value
+            self.dst_not_our = True
 
         dst_acc = Account.objects.filter(id=value, is_active=True).first()
         dst_card = CreditCard.objects.filter(number=value, is_active=True).first()
@@ -48,7 +52,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         return value
 
     def validate_document_id(self, value):
-        if self.dst and self.dst.user.document_id.lower() != str(value).lower():
+        if not self.dst_not_our and self.dst and self.dst.user.document_id.lower() != str(value).lower():
             raise serializers.ValidationError(
                 _("Target account or card is not associated with that document id")
             )
@@ -79,7 +83,16 @@ class UserTransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         field_names = [field.name for field in self.Meta.model._meta.get_fields()]
         data = {a: b for a, b in validated_data.items() if a in field_names}
-        return self.Meta.model.objects.create(**data)
+        kwargs = {
+            "amount": data["amount"],
+            "reason": data["reason"],
+            "source": {"number": data["source"]},
+            "target": {
+                "number": data["target"],
+                "document_id": validated_data["document_id"],
+            }
+        }
+        return self.Meta.model.objects.create_any_transaction(**kwargs)
 
 
 class TransactionCardSerializer(serializers.Serializer):

@@ -6,6 +6,8 @@ from degvabank.apps.account.models import Account
 from degvabank.apps.card.models import CreditCard
 from django.utils.translation import gettext_lazy as _
 
+from degvabank.apps.transaction.utils import is_our_number
+
 
 class TransactionMixin:
 
@@ -65,11 +67,6 @@ class TransactionMixin:
                 raise serializers.ValidationError(
                     {"source": _("Invalid or non existent number")}
                 )
-            self.check_acc_or_card_document_id(
-                source_obj,
-                source.get("document_id"),
-                {"source": _("Document id did not match")}
-            )
             self.check_acc_or_card_funds(
                 source_obj,
                 amount,
@@ -80,16 +77,16 @@ class TransactionMixin:
             target_obj = self.get_account_or_creditcard(target["number"])
             if not target_obj:
                 raise serializers.ValidationError(
-                    {"source": _("Invalid or non existent number")}
+                    {"target": _("Invalid or non existent number")}
                 )
             self.check_acc_or_card_document_id(
                 target_obj,
-                source["document_id"],
-                {"source": _("Document id did not match")}
+                target["document_id"],
+                {"target": _("Document id did not match")}
             )
 
     def is_our_number(self, number):
-        return number.startswith("1337") or number.startswith("00691337")
+        return is_our_number(number)
 
     def is_inhouse(self, transaction):
         src = str(transaction.source)
