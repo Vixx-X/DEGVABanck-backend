@@ -9,6 +9,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.forms import _unicode_ci_compare
 from django.contrib.sites.shortcuts import get_current_site
 from django_otp import verify_token
+from degvabank.apps.user import mails
 
 from .models import User
 from degvabank.apps.account.models import Account
@@ -81,7 +82,7 @@ class PasswordResetSerializer(serializers.Serializer):
     def send_password_reset_email(self, site, user):
         extra_context = {
             "user": user,
-            "url": site + get_password_reset_url(user),
+            "url": str(site) + get_password_reset_url(user),
         }
         mail = mails.ResetPasswordMail()
         mail.set_context(**extra_context)
