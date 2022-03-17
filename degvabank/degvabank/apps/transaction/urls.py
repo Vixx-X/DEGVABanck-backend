@@ -32,7 +32,7 @@ urlpatterns = [
         include(router.urls),
     ),
     path(
-        "bank/transaction",
+        "bank/transaction/",
         views.ForeignTransactionView.as_view(),
         name="bank-transaction",
     ),

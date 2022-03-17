@@ -82,7 +82,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         return self.Meta.model.objects.create(**data)
 
 
-class CardSerializer(serializers.Serializer):
+class TransactionCardSerializer(serializers.Serializer):
     number = serializers.CharField()
     security_code = serializers.CharField()
     expiration_date = serializers.DateTimeField()
@@ -98,7 +98,7 @@ class CardSerializer(serializers.Serializer):
         ],
     )
 
-class AccountSerializer(serializers.Serializer):
+class TransactionAccountSerializer(serializers.Serializer):
     number = serializers.CharField()
     document_id = serializers.CharField(
         required=True,
@@ -114,10 +114,10 @@ class AccountSerializer(serializers.Serializer):
 
 class ForeignTransactionSerializer(serializers.ModelSerializer):
 
-    acc_src = AccountSerializer(required=False)
-    acc_dst = AccountSerializer(required=False)
-    card_src = CardSerializer(required=False)
-    card_dst = CardSerializer(required=False)
+    acc_src = TransactionAccountSerializer(required=False)
+    acc_dst = TransactionAccountSerializer(required=False)
+    card_src = TransactionCardSerializer(required=False)
+    card_dst = TransactionCardSerializer(required=False)
 
     class Meta:
         model = Transaction
