@@ -18,6 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.base import View
 # from degvabank.apps.user.generate_pdfs import html_to_pdf_view
 
 from drf_spectacular.views import (
@@ -115,6 +116,16 @@ urlpatterns = (
         # docs
         path("docs/", include(docs_urls)),
         # path("pdf/", html_to_pdf_view, name="pdf")
+        path(
+            "user/password-reset/confirm/<str:uidb64>/<str:token>/",
+            View.as_view(),
+            name="password-reset-confirm",
+        ),
+        path(
+            "user/email-settings/<str:uidb64>/<str:token>/",
+            View.as_view(),
+            name="email-settings",
+        ),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
