@@ -1,10 +1,24 @@
 <html>
-{% load static %}
+
 <head>
     <title>Transactions</title>
     <style>
         body {
             background-color: #f7f7f7;
+        }
+
+        div.break {
+            page-break-before: always;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+            text-align: center;
+            border-spacing: 0
         }
     </style>
 </head>
@@ -28,8 +42,8 @@
         </tr>
     </table>
 
-    <br/>
-    <br/>
+    <br />
+    <br />
     {{ svg | safe }}
 </body>
 
