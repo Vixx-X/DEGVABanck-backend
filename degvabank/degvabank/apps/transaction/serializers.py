@@ -87,6 +87,7 @@ class CardSerializer(serializers.Serializer):
     security_code = serializers.CharField()
     expiration_date = serializers.DateTimeField()
     document_id = serializers.CharField(
+        required=True,
         write_only=True,
         max_length=15,
         validators=[
@@ -100,6 +101,7 @@ class CardSerializer(serializers.Serializer):
 class AccountSerializer(serializers.Serializer):
     number = serializers.CharField()
     document_id = serializers.CharField(
+        required=True,
         write_only=True,
         max_length=15,
         validators=[
@@ -112,7 +114,6 @@ class AccountSerializer(serializers.Serializer):
 
 class ForeignTransactionSerializer(serializers.ModelSerializer):
 
-    acc = card = dst = None
     acc_src = AccountSerializer(required=False)
     acc_dst = AccountSerializer(required=False)
     card_src = CardSerializer(required=False)
@@ -122,9 +123,10 @@ class ForeignTransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = [
             "id",
-            "source",
-            "target",
-            "document_id",
+            "acc_src",
+            "acc_dst",
+            "card_src",
+            "card_dst",
             "amount",
             "type",
             "status",
@@ -136,6 +138,10 @@ class ForeignTransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         field_names = [field.name for field in self.Meta.model._meta.get_fields()]
         data = {a: b for a, b in validated_data.items() if a in field_names}
-        data["source"] = validated_data["acc_src"] or validated_data["card_src"]
-        data["target"] = validated_data["acc_dst"] or validated_data["card_dst"]
-        return self.Meta.model.objects.create1(data)
+        kwargs = {
+            "amount": data["amount"],
+            "reason": data["reason"],
+            "source": validated_data.get("acc_src") or validated_data.get("card_src"),
+            "target": validated_data.get("acc_dst") or validated_data.get("card_dst")
+        }
+        return self.Meta.model.objects.create_any_transaction(from_foreign=True, **kwargs)

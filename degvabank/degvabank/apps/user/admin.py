@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.admin import DateFieldListFilter
 from django.utils.translation import gettext_lazy as _
 from .models import User
 
-# Register your models here.
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
+    search_fields = ("username", "first_name", "last_name", "email", "document_id__icontains")
+    list_display = ("username", "email", "full_name", "document", "type", "date_joined")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups", "type", ("date_joined", DateFieldListFilter))
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         (

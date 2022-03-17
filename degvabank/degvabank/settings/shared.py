@@ -311,6 +311,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-
+# Django Admin Tools
+# https://django-admin-tools.readthedocs.io/en/latest/customization.html#customizing-the-dashboards
 ADMIN_TOOLS_INDEX_DASHBOARD = "degvabank.dashboard.CustomIndexDashboard"
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = "degvabank.dashboard.CustomAppIndexDashboard"
+ADMIN_TOOLS_MENU = "degvabank.menu.CustomMenu"

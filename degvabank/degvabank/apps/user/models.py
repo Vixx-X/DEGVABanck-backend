@@ -1,8 +1,6 @@
 from django.core import validators
 from django.db import models
 from django.conf import settings
-from django.template import Context, Template
-from django.template.loader import get_template
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
@@ -25,7 +23,7 @@ class User(AbstractUser):
         JURIDIC = "JURIDIC", _("Juridic")
 
     type = models.CharField(
-        _("type of user (natural/juridic)"),
+        _("user type"),
         max_length=50,
         choices=UserType.choices,
     )
@@ -45,6 +43,10 @@ class User(AbstractUser):
         # Returns the first_name and the last_name
         return f"{self.first_name} {self.last_name}"
 
+    @property
+    def full_name(self):
+        return self.get_full_name()
+
     def get_short_name(self):
         # Returns the short name for the user.
         return self.first_name
@@ -52,9 +54,13 @@ class User(AbstractUser):
     def get_pretty_document(self):
         # Returns document_id prettier
         document_id = str(self.document_id)
-        letter = document_id[0].upper()
+        letter = document_id[:1].upper()
         number = document_id[1:]
         return f"{letter}-{number}"
+
+    @property
+    def document(self):
+        return self.get_pretty_document()
 
 
 class EmailDevice(BaseEmailDevice):
