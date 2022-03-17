@@ -44,3 +44,6 @@ django-filter==21.1
 
 # pdf
 weasyprint==54.2
+
+# charts
+matplotlib==3.5.1

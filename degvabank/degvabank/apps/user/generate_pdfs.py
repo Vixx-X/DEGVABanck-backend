@@ -29,6 +29,7 @@ def generate_transaction_pdf(request=None, user=User.objects.get(username="danie
     plt.rcParams['svg.fonttype'] = 'none'
     if sum(y) == 0:
         plt.bar(x, y)
+        plt.xticks(rotation='vertical')
     else:
         plt.pie(y, labels=x, autopct='%.1f%%')
 
@@ -117,6 +118,7 @@ def generate_date_pdf(request=None, min_date="2020-01-01", max_date="2040-01-01"
 
     fig = plt.figure()
     plt.rcParams['svg.fonttype'] = 'none'
+    plt.rcParams['figure.autolayout'] = True
     plt.bar(x, y, color=['b', 'r', 'm', 'g'])
 
     imgtime = StringIO()
@@ -133,6 +135,7 @@ def generate_date_pdf(request=None, min_date="2020-01-01", max_date="2040-01-01"
 
     fig = plt.figure()
     plt.rcParams['svg.fonttype'] = 'none'
+    plt.rcParams['figure.autolayout'] = True
     plt.bar(x, y, color=['b', 'r', 'm', 'g'])
 
     imgdate = StringIO()
