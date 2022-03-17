@@ -18,7 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth.decorators import user_passes_test
-# from degvabank.apps.user.generate_pdfs import html_to_pdf_view
+from degvabank.apps.user.generate_pdfs import generate_clients_pdf, generate_date_pdf, generate_transaction_pdf
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -114,7 +114,9 @@ urlpatterns = (
         ),
         # docs
         path("docs/", include(docs_urls)),
-        # path("pdf/", html_to_pdf_view, name="pdf")
+        path("transactionpdf/", generate_transaction_pdf, name="pdf1"),
+        path("datepdf/", generate_date_pdf, name="pdf2"),
+        path("clientpdf/", generate_clients_pdf, name="pdf3")
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

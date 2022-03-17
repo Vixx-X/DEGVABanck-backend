@@ -1,5 +1,6 @@
 from itertools import count
 import operator
+from typing import Sequence
 from django.db.models import Count, Q
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpRequest, HttpResponse
@@ -21,13 +22,14 @@ def generate_transaction_pdf(request=None, user=User.objects.get(username="danie
     fail_filter = Q(status=Transaction.TransactionStatus.REJECTED)
     transactions = {"user": user.username, "transactions": Transaction.objects.get_queryset_by_user(user).aggregate(other=Count('id', filter=~(success_filter&fail_filter)), succeed=Count('id', filter=success_filter), fail=Count('id', filter=fail_filter))}
     
-    x = transactions["transactions"].keys()
-    y = transactions["transactions"].values()
+    x = list(transactions["transactions"].keys())
+    y = list(transactions["transactions"].values())
 
     transactions["transactions"]["total"] = sum(y)
 
     fig = plt.figure()
-    plt.pie(y, labels=x)
+    plt.rcParams['svg.fonttype'] = 'none'
+    plt.pie(y, labels=x, autopct='%.1f%%')
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg')
@@ -51,29 +53,31 @@ def generate_transaction_pdf(request=None, user=User.objects.get(username="danie
 
 # Clientes ordenados por cantidad de transacciones
 def generate_clients_pdf(request=None):
-    transactions = Transaction.objects.all()
+    transactions = []
+    users = []
+    client_transactions = []
 
     clients = User.objects.all()
-    clients_transactions = []
+    for user in clients:
+        transaction = len(Transaction.objects.get_queryset_by_user(user))
+        user = user.username
+        users.append(user)
+        transactions.append(transaction)
+        client_transactions.append({"user": user, "transaction": transaction})
 
-    for client in clients:
-        clients_accounts = Account.objects.filter(user=client)
-        client_transactions = []
+    client_transactions = sorted(client_transactions, key=lambda x: x["transaction"], reverse=True)
 
-        for account in clients_accounts:
-            transaction = transactions.filter(target=account.id)
-            if (len(transaction)):
-                client_transactions.append(transaction)
-            transaction = transactions.filter(source=account.id)
-            if (len(transaction)):
-                client_transactions.append(transaction)
+    fig = plt.figure()
+    plt.rcParams['svg.fonttype'] = 'none'
+    plt.bar(users, transactions)
 
-        clients_transactions.append({"user": client.username, "num_transactions": len(client_transactions)})
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg')
+    imgdata.seek(0)  # rewind the data
 
-    clients_transactions.sort(key=operator.itemgetter("num_transactions"))
-    clients_transactions.reverse()
+    svg_dta = imgdata.getvalue()
 
-    html_string = render_to_string('./admin/generate_pdf_clients.html', {'clients_transactions': clients_transactions})
+    html_string = render_to_string('./admin/generate_pdf_clients.html', {'clients_transactions': client_transactions, "svg": svg_dta})
 
     html = HTML(string=html_string)
     html.write_pdf(target='/tmp/mypdf.pdf');
@@ -109,7 +113,18 @@ def generate_date_pdf(request=None):
     transaction_dates.sort(key=operator.itemgetter("count"))
     transaction_dates.reverse()
 
-    html_string = render_to_string('./admin/generate_pdf_dates.html', {'transaction_dates': transaction_dates, 'transaction_times': transaction_times})
+    x = np.arange(0, 10, 1)
+
+    fig = plt.figure()
+    plt.pie(x)
+
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg')
+    imgdata.seek(0)  # rewind the data
+
+    svg_dta = imgdata.getvalue()
+
+    html_string = render_to_string('./admin/generate_pdf_dates.html', {'transaction_dates': transaction_dates, 'transaction_times': transaction_times, "svg": svg_dta})
 
     html = HTML(string=html_string)
     html.write_pdf(target='/tmp/mypdf.pdf');

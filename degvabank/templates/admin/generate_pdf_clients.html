@@ -19,11 +19,14 @@
         {% for client_transactions in clients_transactions %}
         <tr>
             <td>{{client_transactions.user}}</td>
-            <td>{{client_transactions.num_transactions}}</td>
+            <td>{{client_transactions.transaction}}</td>
         </tr>
         {% endfor %}
     </table>
-    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+
+    <br/>
+    <br/>
+    {{ svg | safe }}
 </body>
 
 </html>
