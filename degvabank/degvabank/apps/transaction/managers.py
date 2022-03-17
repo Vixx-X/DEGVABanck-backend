@@ -66,7 +66,7 @@ class TransactionMixin:
             data = {
                 "card": source["number"],
                 "cvc": source["security_code"],
-                "expirationDate": source["expiration_date"].strftime("%m%Y"),
+                "expirationDate": source["expiration_date"].strftime("%m%y"),
                 "descripcion": reason,
                 "monto": float(amount),
             }
@@ -75,7 +75,8 @@ class TransactionMixin:
             data = {
                 "cuentaDestino": target["number"],
                 "cuentaOrigen": source["number"],
-                "identificador": str(target["document_id"]).lower(),
+                "identificador": str(target["document_id"])[1:],
+                "identificadorTipo": str(target["document_id"])[0].upper(),
                 "descripcion": reason,
                 "monto": float(amount),
             }
