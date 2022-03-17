@@ -31,9 +31,18 @@ class CustomMenu(Menu):
             items.MenuItem(
                 _('Reports'),
                 children=[
-                    items.MenuItem(_("Client Transactions")),
-                    items.MenuItem(_("Client list")),
-                    items.MenuItem(_("Transactions")),
+                    items.MenuItem(
+                        _("Client Transactions"),
+                        reverse('admin:report-client-transaction')
+                    ),
+                    items.MenuItem(
+                        _("Client list"),
+                        reverse('admin:report-client-list')
+                    ),
+                    items.MenuItem(
+                        _("Transactions"),
+                        reverse('admin:report-transactions')
+                    ),
                 ]
             )
         ]

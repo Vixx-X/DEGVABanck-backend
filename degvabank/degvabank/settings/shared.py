@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'admin_tools.dashboard',
 
     # django apps
-    'django.contrib.admin',
+    'degvabank.core.admin.AdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
