@@ -63,23 +63,27 @@ class TransactionMixin:
         reason = transaction_data["reason"]
 
         if is_card(source["number"]) and not is_our_card(source["number"]):
-            resp = requests.post(DAKITI_CARD_URL, json={
+            data = {
                 "card": source["number"],
                 "cvc": source["security_code"],
                 "expirationDate": source["expiration_date"].strftime("%m%Y"),
                 "descripcion": reason,
                 "monto": float(amount),
-            })
+            }
+            resp = requests.post(DAKITI_CARD_URL, json=data)
         else:
-            resp = requests.post(DAKITI_ACC_URL, json={
+            data = {
                 "cuentaDestino": target["number"],
                 "cuentaOrigen": source["number"],
-                "identificador": target["document_id"],
+                "identificador": str(target["document_id"]).lower(),
                 "descripcion": reason,
                 "monto": float(amount),
-            })
+            }
+            resp = requests.post(DAKITI_ACC_URL, json=data)
         if not resp.ok:
-            raise serializers.ValidationError(_("Error with other bank"))
+            print(data)
+            print(resp.json())
+            raise serializers.ValidationError({"non_field_error": [_("Error with other bank")]})
 
     def validated_transaction_data(self, **transaction_data):
         source=transaction_data["source"]
@@ -150,7 +154,7 @@ class TransactionManager(TransactionMixin, models.Manager):
 
             transaction = self.process_transaction(transaction)
             transaction.save()
-        except ValidationError as e:
+        except serializers.ValidationError as e:
             transaction.status = transaction.TransactionStatus.REJECTED
             transaction.save()
             raise e
