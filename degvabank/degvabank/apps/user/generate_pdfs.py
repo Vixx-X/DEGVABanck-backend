@@ -55,7 +55,7 @@ def generate_transaction_pdf(user, min_date="2020-01-01", max_date="2040-01-01")
     fs = FileSystemStorage('/tmp')
     with fs.open('mypdf.pdf') as pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="client_transactions.pdf"'
         return response
 
     return response
@@ -99,7 +99,7 @@ def generate_clients_pdf(min_date="2020-01-01", max_date="2040-01-01"):
     fs = FileSystemStorage('/tmp')
     with fs.open('mypdf.pdf') as pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="transactions_per_client.pdf"'
         return response
 
     return response
@@ -175,7 +175,7 @@ def generate_date_pdf(min_date="2020-01-01", max_date="2040-01-01"):
     fs = FileSystemStorage('/tmp')
     with fs.open('mypdf.pdf') as pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="transactions_per_date_and_time.pdf"'
         return response
 
     return response
