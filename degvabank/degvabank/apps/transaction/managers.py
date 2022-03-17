@@ -68,7 +68,7 @@ class TransactionMixin:
                 "cvc": source["security_code"],
                 "expirationDate": source["expiration_date"].strftime("%m%Y"),
                 "descripcion": reason,
-                "monto": amount,
+                "monto": float(amount),
             })
         else:
             resp = requests.post(DAKITI_ACC_URL, json={
@@ -76,7 +76,7 @@ class TransactionMixin:
                 "cuentaOrigen": source["number"],
                 "identificador": target["document_id"],
                 "descripcion": reason,
-                "monto": amount,
+                "monto": float(amount),
             })
         if not resp.ok:
             serializers.ValidationError(_("Error with other bank"))

@@ -41,6 +41,7 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         if not is_our_number(value):
             self.dst = value
             self.dst_not_our = True
+            return value
 
         dst_acc = Account.objects.filter(id=value, is_active=True).first()
         dst_card = CreditCard.objects.filter(number=value, is_active=True).first()
