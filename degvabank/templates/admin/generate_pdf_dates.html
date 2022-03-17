@@ -6,6 +6,20 @@
         body {
             background-color: #f7f7f7;
         }
+
+        div.break {
+            page-break-before: always;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+            text-align: center;
+            border-spacing: 0
+        }
     </style>
 </head>
 
@@ -23,21 +37,28 @@
         </tr>
         {% endfor %}
     </table>
-    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
-    <h1 style="text-align: center;">Number of Transactions per Time</h1>
-    <table>
-        <tr>
-            <td>Time</td>
-            <td>Number of Transactions</td>
-        </tr>
-        {% for transaction in transaction_times %}
-        <tr>
-            <td>{{ transaction.time }}</td>
-            <td>{{ transaction.count }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+    <br />
+    <br />
+    {{ svg_date | safe }}
+
+    <div class="break">
+        <h1 style="text-align: center;">Number of Transactions per Time</h1>
+        <table>
+            <tr>
+                <td>Time</td>
+                <td>Number of Transactions</td>
+            </tr>
+            {% for transaction in transaction_times %}
+            <tr>
+                <td>{{ transaction.time }}</td>
+                <td>{{ transaction.count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br />
+        <br />
+        {{ svg_time | safe }}
+    </div>
 </body>
 
 </html>

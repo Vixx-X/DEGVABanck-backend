@@ -6,6 +6,20 @@
         body {
             background-color: #f7f7f7;
         }
+
+        div.break {
+            page-break-before: always;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+            text-align: center;
+            border-spacing: 0
+        }
     </style>
 </head>
 
@@ -19,11 +33,13 @@
         {% for client_transactions in clients_transactions %}
         <tr>
             <td>{{client_transactions.user}}</td>
-            <td>{{client_transactions.num_transactions}}</td>
+            <td>{{client_transactions.transaction}}</td>
         </tr>
         {% endfor %}
     </table>
-    <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-donut-chart.png" />
+    <br />
+    <br />
+    {{ svg | safe }}
 </body>
 
 </html>
