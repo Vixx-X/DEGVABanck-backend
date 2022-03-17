@@ -79,7 +79,7 @@ class TransactionMixin:
                 "monto": float(amount),
             })
         if not resp.ok:
-            serializers.ValidationError(_("Error with other bank"))
+            raise serializers.ValidationError(_("Error with other bank"))
 
     def validated_transaction_data(self, **transaction_data):
         source=transaction_data["source"]
@@ -149,9 +149,10 @@ class TransactionManager(TransactionMixin, models.Manager):
                 self.send_transaction(**transaction_data)
 
             transaction = self.process_transaction(transaction)
+            transaction.save()
         except ValidationError as e:
             transaction.status = transaction.TransactionStatus.REJECTED
+            transaction.save()
             raise e
 
-        transaction.save()
         return transaction
