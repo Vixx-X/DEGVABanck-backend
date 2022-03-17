@@ -86,7 +86,9 @@ class UserTransactionSerializer(serializers.ModelSerializer):
         kwargs = {
             "amount": data["amount"],
             "reason": data["reason"],
-            "source": {"number": data["source"]},
+            "source": {
+                "number": data["source"]
+            },
             "target": {
                 "number": data["target"],
                 "document_id": validated_data["document_id"],

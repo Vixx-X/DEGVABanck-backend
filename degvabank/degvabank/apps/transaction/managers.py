@@ -5,9 +5,12 @@ from rest_framework import serializers
 from degvabank.apps.account.models import Account
 from degvabank.apps.card.models import CreditCard
 from django.utils.translation import gettext_lazy as _
+import requests
 
-from degvabank.apps.transaction.utils import is_our_number
+from degvabank.apps.transaction.utils import is_card, is_our_card, is_our_number
 
+DAKITI_CARD_URL = "https://dakiti-back.herokuapp.com/api/otherBankCards"
+DAKITI_ACC_URL = "https://dakiti-back.herokuapp.com/api/otherBankTransfer"
 
 class TransactionMixin:
 
@@ -54,7 +57,29 @@ class TransactionMixin:
         return transaction
 
     def send_transaction(self, **transaction_data):
-        pass
+        source = transaction_data["source"]
+        target = transaction_data["target"]
+        amount = transaction_data["amount"]
+        reason = transaction_data["reason"]
+
+        if is_card(source["number"]) and not is_our_card(source["number"]):
+            resp = requests.post(DAKITI_CARD_URL, json={
+                "card": source["number"],
+                "cvc": source["security_code"],
+                "expirationDate": source["expiration_date"].strftime("%m%Y"),
+                "descripcion": reason,
+                "monto": amount,
+            })
+        else:
+            resp = requests.post(DAKITI_ACC_URL, json={
+                "cuentaDestino": target["number"],
+                "cuentaOrigen": source["number"],
+                "identificador": target["document_id"],
+                "descripcion": reason,
+                "monto": amount,
+            })
+        if not resp.ok:
+            serializers.ValidationError(_("Error with other bank"))
 
     def validated_transaction_data(self, **transaction_data):
         source=transaction_data["source"]
