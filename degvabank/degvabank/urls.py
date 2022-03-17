@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.contrib.auth.decorators import user_passes_test
 from degvabank.apps.user.generate_pdfs import generate_clients_pdf, generate_date_pdf, generate_transaction_pdf
 
+
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -117,6 +118,17 @@ urlpatterns = (
         path("transactionpdf/", generate_transaction_pdf, name="pdf1"),
         path("datepdf/", generate_date_pdf, name="pdf2"),
         path("clientpdf/", generate_clients_pdf, name="pdf3")
+        # path("pdf/", html_to_pdf_view, name="pdf")
+        path(
+            "user/password-reset/confirm/<str:uidb64>/<str:token>/",
+            View.as_view(),
+            name="password-reset-confirm",
+        ),
+        path(
+            "user/email-settings/<str:uidb64>/<str:token>/",
+            View.as_view(),
+            name="email-settings",
+        ),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
