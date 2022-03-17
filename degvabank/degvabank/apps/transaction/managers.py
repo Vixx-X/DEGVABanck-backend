@@ -51,10 +51,10 @@ class TransactionMixin:
         transaction.status = transaction.TransactionStatus.ACCEPTED
         return transaction
 
-    def send_transaction(self, transaction_data):
+    def send_transaction(self, **transaction_data):
         pass
 
-    def validated_transaction_data(self, transaction_data):
+    def validated_transaction_data(self, **transaction_data):
         source=transaction_data["source"]
         target=transaction_data["target"]
         amount=transaction_data["amount"]

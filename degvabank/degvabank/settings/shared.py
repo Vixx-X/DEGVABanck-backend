@@ -45,6 +45,8 @@ EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+OTP_EMAIL_SENDER = EMAIL_HOST_USER
+OTP_EMAIL_TOKEN_VALIDITY = 300
 
 # simple-mail settings
 # https://github.com/VingtCinq/django-simple-mail
