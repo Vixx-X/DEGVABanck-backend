@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from io import StringIO
 
 # Transacciones fallidas/exitosas por Clientes
-def generate_transaction_pdf(request=None, user=User.objects.get(username="daniel"), min_date="2020-01-01", max_date="2040-01-01"):
+def generate_transaction_pdf(user, min_date="2020-01-01", max_date="2040-01-01"):
     success_filter = Q(status=Transaction.TransactionStatus.ACCEPTED)
     fail_filter = Q(status=Transaction.TransactionStatus.REJECTED)
     other_filter = Q(status__in=[Transaction.TransactionStatus.ERROR, Transaction.TransactionStatus.PENDING])
@@ -62,7 +62,7 @@ def generate_transaction_pdf(request=None, user=User.objects.get(username="danie
 
 
 # Clientes ordenados por cantidad de transacciones
-def generate_clients_pdf(request=None, min_date="2020-01-01", max_date="2040-01-01"):
+def generate_clients_pdf(min_date="2020-01-01", max_date="2040-01-01"):
     client_transactions = []
 
     clients = User.objects.all()
@@ -105,7 +105,7 @@ def generate_clients_pdf(request=None, min_date="2020-01-01", max_date="2040-01-
     return response
 
 # Días y horas con más transaccionalidad
-def generate_date_pdf(request=None, min_date="2020-01-01", max_date="2040-01-01"):
+def generate_date_pdf(min_date="2020-01-01", max_date="2040-01-01"):
     transactions = Transaction.objects.filter(date__gte=min_date, date__lte=max_date)
     
     transactions = transactions.values('date')

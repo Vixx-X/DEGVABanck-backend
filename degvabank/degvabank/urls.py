@@ -116,9 +116,6 @@ urlpatterns = (
         ),
         # docs
         path("docs/", include(docs_urls)),
-        path("transactionpdf/", generate_transaction_pdf, name="pdf1"),
-        path("datepdf/", generate_date_pdf, name="pdf2"),
-        path("clientpdf/", generate_clients_pdf, name="pdf3"),
         path(
             "user/password-reset/confirm/<str:uidb64>/<str:token>/",
             View.as_view(),
