@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.query_utils import Q
 from rest_framework import serializers
@@ -7,6 +6,7 @@ from degvabank.apps.card.models import CreditCard
 from django.utils.translation import gettext_lazy as _
 import requests
 
+from degvabank.apps.transaction.exceptions import TransactionError
 from degvabank.apps.transaction.utils import is_card, is_our_card, is_our_number
 
 DAKITI_CARD_URL = "https://dakiti-back.herokuapp.com/api/otherBankCards"
@@ -25,10 +25,16 @@ class TransactionMixin:
     def check_acc_or_card_funds(self, obj, ammount, msg):
         if isinstance(obj, Account):
             if obj.balance < ammount:
-                raise serializers.ValidationError(msg)
+                raise serializers.ValidationError(
+                    msg,
+                    code=TransactionError.INSUFICIENT_FUNDS
+                )
         if isinstance(obj, CreditCard):
             if obj.credit < ammount:
-                raise serializers.ValidationError(msg)
+                raise serializers.ValidationError(
+                    msg,
+                    code=TransactionError.INSUFICIENT_CREDITS,
+                )
 
     def charge_acc_or_card(self, obj, ammount):
         if isinstance(obj, Account):
@@ -95,7 +101,8 @@ class TransactionMixin:
             source_obj = self.get_account_or_creditcard(source["number"])
             if not source_obj:
                 raise serializers.ValidationError(
-                    {"source": _("Invalid or non existent number")}
+                    {"source": _("Invalid or non existent number")},
+                    code=TransactionError.INVALID_ORIGIN_CARD if is_card(source["number"]) else TransactionError.INVALID_ORIGIN_ACCOUNT
                 )
             self.check_acc_or_card_funds(
                 source_obj,
@@ -107,7 +114,8 @@ class TransactionMixin:
             target_obj = self.get_account_or_creditcard(target["number"])
             if not target_obj:
                 raise serializers.ValidationError(
-                    {"target": _("Invalid or non existent number")}
+                    {"target": _("Invalid or non existent number")},
+                    code=TransactionError.INVALID_TARGET_CARD if is_card(target["number"]) else TransactionError.INVALID_TARGET_ACCOUNT
                 )
             self.check_acc_or_card_document_id(
                 target_obj,

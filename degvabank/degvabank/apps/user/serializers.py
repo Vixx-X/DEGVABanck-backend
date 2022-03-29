@@ -129,9 +129,9 @@ class OTPChallengeSerializer(serializers.Serializer):
         super().__init__(instance=instance, data=data, **kwargs)
         self.user = self.context["request"].user
 
-    def validate_token(self, token):
-        data = self.get_initial()
-        device = data["device"]
+    def validate(self, attrs):
+        ret = super().validate(attrs)
+        device = attrs["device"]
         verified = (
             verify_token(user=self.user, device_id=device, token=token) is not None
         )
@@ -140,6 +140,7 @@ class OTPChallengeSerializer(serializers.Serializer):
                 _("The token submitted is invalid."),
                 code="token_invalid",
             )
+        return ret
 
 
 class ChangePasswordSerializer(OTPChallengeSerializer):
@@ -162,6 +163,7 @@ class ChangePasswordSerializer(OTPChallengeSerializer):
                 _("The old password didn’t match."),
                 code="wrong_password",
             )
+        return old_password
 
     def validate(self, attrs):
         super().validate(attrs)

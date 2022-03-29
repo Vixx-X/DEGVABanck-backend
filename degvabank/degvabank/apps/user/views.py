@@ -206,7 +206,7 @@ class ChangeEmailView(generics.GenericAPIView):
         return Response({"message": _("Your email have been successfully changed.")})
 
 
-class RegistrationView(APIView):
+class RegistrationView(generics.GenericAPIView):
     """
     API for registering users
 
@@ -224,13 +224,11 @@ class RegistrationView(APIView):
     def post(self, request, *args, **kwargs):
         ser = self.serializer_class(data=request.data)
 
-        if ser.is_valid():
-            # create the user
-            user = ser.save()
-            self.send_registration_email(user)
-            return Response(
-                {"message": _("You have successfully registered.")},
-                status=status.HTTP_201_CREATED,
-            )
-
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+        ser.is_valid(raise_exception=True)
+        # create the user
+        user = ser.save()
+        self.send_registration_email(user)
+        return Response(
+            {"message": _("You have successfully registered.")},
+            status=status.HTTP_201_CREATED,
+        )

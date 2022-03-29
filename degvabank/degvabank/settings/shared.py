@@ -20,6 +20,13 @@ from django.utils.translation import gettext_lazy as _
 env = environ.Env()
 environ.Env.read_env()
 
+GRAPH_MODELS = {
+    "all_applications": True,
+    "group_models": True,
+    "output": "project_visualized.png",
+    "pydot": True,
+}
+
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -106,7 +113,10 @@ INSTALLED_APPS = [
     "corsheaders",
 
     # bower
-    'djangobower'
+    'djangobower',
+
+    #exts
+    'django_extensions',
 ]
 # fmt: on
 
