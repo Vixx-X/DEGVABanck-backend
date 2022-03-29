@@ -47,3 +47,4 @@ weasyprint==54.2
 
 # charts
 matplotlib==3.5.1
+django-extensions==3.1.5
