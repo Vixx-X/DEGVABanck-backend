@@ -225,6 +225,7 @@ class RegistrationView(generics.GenericAPIView):
         ser = self.serializer_class(data=request.data)
 
         ser.is_valid(raise_exception=True)
+
         # create the user
         user = ser.save()
         self.send_registration_email(user)

@@ -132,6 +132,7 @@ class OTPChallengeSerializer(serializers.Serializer):
     def validate(self, attrs):
         ret = super().validate(attrs)
         device = attrs["device"]
+        token = attrs["token"]
         verified = (
             verify_token(user=self.user, device_id=device, token=token) is not None
         )
