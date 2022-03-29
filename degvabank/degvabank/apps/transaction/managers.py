@@ -6,7 +6,7 @@ from degvabank.apps.card.models import CreditCard
 from django.utils.translation import gettext_lazy as _
 import requests
 
-from degvabank.apps.transaction.exceptions import TransactionError
+from degvabank.apps.transaction.exceptions import TransactionError, get_error
 from degvabank.apps.transaction.utils import is_card, is_our_card, is_our_number
 
 DAKITI_CARD_URL = "https://dakiti-back.herokuapp.com/api/otherBankCards"
@@ -90,7 +90,7 @@ class TransactionMixin:
         if not resp.ok:
             print(data)
             print(resp.json())
-            raise serializers.ValidationError({"non_field_error": [_("Error with other bank")]})
+            get_error(resp.json().get("codigo", -1))
 
     def validated_transaction_data(self, **transaction_data):
         source=transaction_data["source"]

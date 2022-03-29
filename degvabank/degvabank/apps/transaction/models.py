@@ -10,9 +10,17 @@ source_account (reference)
 from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
 from degvabank.apps.card.utils import is_valid_credit_card
 from degvabank.apps.transaction.managers import TransactionManager
+
+def validate_positive(value):
+    if value < 0:
+        raise ValidationError(
+            _('Amount %(value)s, should not be negative'),
+            params={'value': value},
+        )
 
 
 class Transaction(models.Model):
@@ -43,6 +51,7 @@ class Transaction(models.Model):
         _("amount of money"),
         max_digits=12,
         decimal_places=2,
+        validators=[validate_positive],
     )
 
     reason = models.CharField(
