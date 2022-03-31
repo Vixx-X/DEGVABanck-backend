@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.db.models.query_utils import Q
 from rest_framework import serializers
@@ -14,27 +15,21 @@ DAKITI_ACC_URL = "https://dakiti-back.herokuapp.com/api/otherBankTransfer"
 
 class TransactionMixin:
 
-    def check_acc_or_card_document_id(self, obj, document_id, msg):
+    def check_acc_or_card_document_id(self, obj, document_id, code):
         if isinstance(obj, Account):
-            if False:
-                raise serializers.ValidationError(msg)
-        if isinstance(obj, CreditCard):
-            if False and document_id:
-                raise serializers.ValidationError(msg)
+            if document_id and str(obj.user.document_id).lower() == str(document_id).lower():
+                get_error(code)
+        # if isinstance(obj, CreditCard):
+        #     if document_id and str(obj.user.document_id).lower() == str(document_id).lower():
+        #         get_error(code)
 
-    def check_acc_or_card_funds(self, obj, ammount, msg):
+    def check_acc_or_card_funds(self, obj, ammount):
         if isinstance(obj, Account):
             if obj.balance < ammount:
-                raise serializers.ValidationError(
-                    msg,
-                    code=TransactionError.INSUFICIENT_FUNDS
-                )
+                get_error(TransactionError.INSUFICIENT_FUNDS)
         if isinstance(obj, CreditCard):
             if obj.credit < ammount:
-                raise serializers.ValidationError(
-                    msg,
-                    code=TransactionError.INSUFICIENT_CREDITS,
-                )
+                get_error(TransactionError.INSUFICIENT_CREDITS)
 
     def charge_acc_or_card(self, obj, ammount):
         if isinstance(obj, Account):
@@ -47,6 +42,27 @@ class TransactionMixin:
             Account.objects.filter(id=code, is_active=True).first()
             or CreditCard.objects.filter(number=code, is_active=True).first()
         )
+
+    def check_cvc(self, obj, cvc, code):
+        if obj.security_code != cvc:
+            get_error(code)
+
+    def check_exp_date(self, obj, date, is_source):
+        now = datetime.today()
+        if date < datetime.date(now.year, now.month, 1):
+            get_error(
+                TransactionError.EXP_DATE_EXPIRED_ORIGIN_CARD
+                if is_source else
+                TransactionError.EXP_DATE_EXPIRED_TARGET_CARD
+            )
+
+        if obj.expiration_date.date().year != date.year or obj.expiration_date.date().month != date.year:
+            get_error(
+                TransactionError.EXP_DATE_DID_NOT_MATCH_ORIGIN_CARD
+                if is_source else
+                TransactionError.EXP_DATE_DID_NOT_MATCH_TARGET_CARD
+            )
+
 
     def process_transaction(self, transaction):
         source = self.get_account_or_creditcard(transaction.source)
@@ -99,29 +115,61 @@ class TransactionMixin:
 
         if self.is_our_number(source["number"]):
             source_obj = self.get_account_or_creditcard(source["number"])
+            card = is_card(source["number"])
             if not source_obj:
-                raise serializers.ValidationError(
-                    {"source": _("Invalid or non existent number")},
-                    code=TransactionError.INVALID_ORIGIN_CARD if is_card(source["number"]) else TransactionError.INVALID_ORIGIN_ACCOUNT
+                get_error(
+                    TransactionError.INVALID_ORIGIN_CARD
+                    if card else
+                    TransactionError.INVALID_ORIGIN_ACCOUNT
                 )
+            if card:
+                self.check_cvc(
+                    source_obj,
+                    source["security_code"],
+                    TransactionError.CVC_DID_NOT_MATCH_ORIGIN_CARD,
+                )
+                self.check_exp_date(
+                    source_obj,
+                    source["expiration_date"],
+                    True,
+                )
+            else:
+                self.check_acc_or_card_document_id(
+                    source_obj,
+                    source["document_id"],
+                    TransactionError.DOCUMENT_ID_DID_NOT_MATCH_ORIGIN_ACCOUNT,
+                )
+
             self.check_acc_or_card_funds(
                 source_obj,
                 amount,
-                {"source": _("Does not have enough funds")}
             )
 
         if self.is_our_number(target["number"]):
             target_obj = self.get_account_or_creditcard(target["number"])
+            card = is_card(target["number"])
             if not target_obj:
                 raise serializers.ValidationError(
                     {"target": _("Invalid or non existent number")},
                     code=TransactionError.INVALID_TARGET_CARD if is_card(target["number"]) else TransactionError.INVALID_TARGET_ACCOUNT
                 )
-            self.check_acc_or_card_document_id(
-                target_obj,
-                target["document_id"],
-                {"target": _("Document id did not match")}
-            )
+            if card:
+                self.check_cvc(
+                    target_obj,
+                    target["security_code"],
+                    TransactionError.CVC_DID_NOT_MATCH_ORIGIN_CARD,
+                )
+                self.check_exp_date(
+                    target_obj,
+                    source["expiration_date"],
+                    False,
+                )
+            else:
+                self.check_acc_or_card_document_id(
+                    target,
+                    target["document_id"],
+                    TransactionError.DOCUMENT_ID_DID_NOT_MATCH_TARGET_ACCOUNT,
+                )
 
     def is_our_number(self, number):
         return is_our_number(number)
